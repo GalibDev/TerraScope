@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "postinstall": "node scripts/prepare-map.mjs",
     "format": "prettier --write app components lib tests scripts *.ts *.mjs *.json README.md",
-    "modis": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/modis.ts"
+    "modis": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/modis.ts",
+    "sundarbans": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/sundarbans.ts"
   },
   "repository": {
     "type": "git",

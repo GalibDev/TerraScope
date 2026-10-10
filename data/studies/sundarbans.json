@@ -1,0 +1,11 @@
+{
+  "id": "sundarbans-east-pilot",
+  "name": "Sundarbans East · pilot window",
+  "bbox": [89.72, 21.90, 89.84, 22.00],
+  "boundaryNote": "Analyst-defined rectangular study window around the UNESCO-listed Sundarbans East location; not a sanctuary boundary or the whole Sundarbans.",
+  "locationReference": "https://whc.unesco.org/en/list/0798/maps/",
+  "periods": {"before": [2001, 2005], "after": [2020, 2024]},
+  "months": [1, 2, 11, 12],
+  "product": "MOD13Q1.061",
+  "projection": "sinu_modis"
+}

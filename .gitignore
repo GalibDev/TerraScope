@@ -8,3 +8,4 @@ coverage/
 audit-report.tmp.json
 .terrascope/
 /data/*.tmp
+__pycache__/
