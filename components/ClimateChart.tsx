@@ -31,38 +31,38 @@ export default function ClimateChart({
     <div className="chart climate-chart">
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart data={data} margin={{ left: 14, right: 14, top: 15 }}>
-          <CartesianGrid vertical={false} stroke="#20353e" />
-          <XAxis dataKey="month" stroke="#7b939c" fontSize={10} />
+          <CartesianGrid vertical={false} stroke="#E3E4DB" />
+          <XAxis dataKey="month" stroke="#5C6C63" fontSize={10} />
           <YAxis
             yAxisId="temperature"
-            stroke="#d9b57b"
+            stroke="#A87532"
             fontSize={10}
             label={{
               value: "°C",
               angle: -90,
               position: "insideLeft",
-              fill: "#d9b57b",
+              fill: "#A87532",
               fontSize: 10,
             }}
           />
           <YAxis
             yAxisId="rain"
             orientation="right"
-            stroke="#86b7d7"
+            stroke="#4B768D"
             fontSize={10}
             label={{
               value: "mm/day",
               angle: 90,
               position: "insideRight",
-              fill: "#86b7d7",
+              fill: "#4B768D",
               fontSize: 10,
             }}
           />
           <Tooltip
             contentStyle={{
-              background: "#10232c",
-              border: "1px solid #29404b",
-              color: "#e7f5f2",
+              background: "#FDFCF8",
+              border: "1px solid #DCDDD4",
+              color: "#202C29",
             }}
           />
           <Legend wrapperStyle={{ fontSize: 10 }} />
@@ -70,14 +70,14 @@ export default function ClimateChart({
             dataKey="precipitation"
             yAxisId="rain"
             name="Precipitation (mean mm/day)"
-            fill="#537d9d"
+            fill="#4B768D"
             radius={[3, 3, 0, 0]}
           />
           <Line
             dataKey="temperature"
             yAxisId="temperature"
             name="Temperature (°C)"
-            stroke="#d9b57b"
+            stroke="#A87532"
             dot={false}
             strokeWidth={2}
             connectNulls={false}

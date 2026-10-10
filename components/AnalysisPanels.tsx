@@ -237,32 +237,32 @@ export default function AnalysisPanels({
             <div className="chart">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={anomaly}>
-                  <CartesianGrid vertical={false} stroke="#20353e" />
+                  <CartesianGrid vertical={false} stroke="#E3E4DB" />
                   <XAxis
                     dataKey="date"
-                    stroke="#7b939c"
+                    stroke="#5C6C63"
                     fontSize={10}
                     minTickGap={65}
                   />
-                  <YAxis stroke="#7b939c" fontSize={10} width={35} />
+                  <YAxis stroke="#5C6C63" fontSize={10} width={35} />
                   <Tooltip
                     contentStyle={{
-                      background: "#10232c",
-                      border: "1px solid #29404b",
-                      color: "#e7f5f2",
+                      background: "#FDFCF8",
+                      border: "1px solid #DCDDD4",
+                      color: "#202C29",
                     }}
                   />
-                  <ReferenceLine y={2} stroke="#d9b57b" strokeDasharray="4 4" />
+                  <ReferenceLine y={2} stroke="#A87532" strokeDasharray="4 4" />
                   <ReferenceLine
                     y={-2}
-                    stroke="#d9b57b"
+                    stroke="#A87532"
                     strokeDasharray="4 4"
                   />
                   <ReferenceLine y={0} stroke="#77949a" />
                   <Bar
                     dataKey="z"
                     name={`Calendar-month z-score${demo ? " (demo)" : ""}`}
-                    fill="#86b7d7"
+                    fill="#4B768D"
                   />
                 </BarChart>
               </ResponsiveContainer>
