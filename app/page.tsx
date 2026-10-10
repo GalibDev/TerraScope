@@ -34,7 +34,10 @@ import {
 } from "lucide-react";
 import { regions } from "@/lib/regions";
 import { demo, monthly, seasonal, trend } from "@/lib/analysis";
-import type { Observation } from "@/lib/analysis";
+import AnalysisPanels from "@/components/AnalysisPanels";
+import type { MeasuredSeries } from "@/components/AnalysisPanels";
+import { pointFeatures } from "@/lib/map-data";
+import ClimateChart from "@/components/ClimateChart";
 const MapView = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => <div className="map loading">Loading Earth imagery…</div>,
@@ -57,14 +60,13 @@ export default function Home() {
     [comparisons, setComparisons] = useState(["assam", "chiang-mai"]),
     [question, setQuestion] = useState(""),
     [answer, setAnswer] = useState(""),
+    [answerSelection, setAnswerSelection] = useState(""),
     [busy, setBusy] = useState(false),
     [climate, setClimate] = useState<Record<string, unknown> | null>(null),
     [climateBusy, setClimateBusy] = useState(false),
     [nav, setNav] = useState(false),
     [imageDate, setImageDate] = useState("2024-02-15");
-  const [measured, setMeasured] = useState<
-      { region: string; index: string; observations: Observation[] }[]
-    >([]),
+  const [measured, setMeasured] = useState<MeasuredSeries[]>([]),
     [datasetStatus, setDatasetStatus] = useState("Loading dataset status…");
   useEffect(() => {
     fetch("/api/vegetation")
@@ -83,19 +85,37 @@ export default function Home() {
       );
   }, []);
   const selected = regions.find((r) => r.id === region)!;
-  const rows = useMemo(
+  const fullRows = useMemo(
     () =>
-      (illustrative
+      illustrative
         ? demo(
             regions.findIndex((r) => r.id === region),
             index,
           )
         : measured.find((s) => s.region === region && s.index === index)
-            ?.observations || []
-      ).filter(
+            ?.observations || [],
+    [illustrative, region, index, measured],
+  );
+  const analyticalPoints = useMemo(
+    () =>
+      pointFeatures(
+        illustrative
+          ? []
+          : measured.filter(
+              (s) => s.region === region || comparisons.includes(s.region),
+            ),
+        index,
+        start,
+        end,
+      ),
+    [measured, region, comparisons, index, start, end, illustrative],
+  );
+  const rows = useMemo(
+    () =>
+      fullRows.filter(
         (r) => +r.date.slice(0, 4) >= start && +r.date.slice(0, 4) <= end,
       ),
-    [illustrative, region, index, start, end, measured],
+    [fullRows, start, end],
   );
   const data = monthly(rows),
     stats = trend(data),
@@ -108,6 +128,8 @@ export default function Home() {
   async function ask(q = question) {
     if (!q.trim()) return;
     setBusy(true);
+    const selection = JSON.stringify([region, index, start, end, illustrative]);
+    setAnswerSelection(selection);
     try {
       const r = await fetch("/api/scientist", {
         method: "POST",
@@ -135,9 +157,17 @@ export default function Home() {
     setClimateBusy(true);
     try {
       const r = await fetch(`/api/climate?region=${region}&year=${end}`);
-      setClimate(await r.json());
+      setClimate({
+        ...(await r.json()),
+        requestRegion: region,
+        requestYear: end,
+      });
     } catch {
-      setClimate({ error: "Connection unavailable. Please retry." });
+      setClimate({
+        error: "Connection unavailable. Please retry.",
+        requestRegion: region,
+        requestYear: end,
+      });
     } finally {
       setClimateBusy(false);
     }
@@ -146,15 +176,22 @@ export default function Home() {
     const csv =
       "source,region,date,index,value\n" +
       rows
-        .map(
-          (r) =>
-            `ILLUSTRATIVE SYNTHETIC,${selected.name},${r.date},${index},${r.value}`,
+        .map((r) =>
+          [
+            illustrative ? "ILLUSTRATIVE SYNTHETIC" : "MOD13Q1.061",
+            selected.name,
+            r.date,
+            index,
+            r.value,
+          ]
+            .map((v) => `"${String(v).replaceAll('"', '""')}"`)
+            .join(","),
         )
         .join("\n");
     const u = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     const a = document.createElement("a");
     a.href = u;
-    a.download = "terrascope-illustrative.csv";
+    a.download = `terrascope-${illustrative ? "illustrative" : "measured"}.csv`;
     a.click();
     URL.revokeObjectURL(u);
   }
@@ -247,10 +284,10 @@ export default function Home() {
           </div>
           <button
             className="secondary"
-            disabled={!illustrative}
+            disabled={!rows.length}
             onClick={download}
           >
-            <Download size={15} /> Export demo CSV
+            <Download size={15} /> Export CSV
           </button>
         </div>
         <section className="filters">
@@ -347,7 +384,7 @@ export default function Home() {
             </div>
             <div className="metric-value">
               {rows.length
-                ? (rows.reduce((s, r) => s + r.value, 0) / rows.length).toFixed(
+                ? (data.reduce((s, r) => s + r.value, 0) / data.length).toFixed(
                     3,
                   )
                 : "—"}
@@ -385,7 +422,9 @@ export default function Home() {
             <p>
               {stats.slope === null
                 ? "Insufficient evidence"
-                : "Descriptive OLS · significance not established"}
+                : stats.interval
+                  ? "OLS · approximate HAC uncertainty"
+                  : "Descriptive OLS · insufficient inference evidence"}
             </p>
             <div className="metric-footer">
               Complete-year means<span>{stats.n} years</span>
@@ -418,17 +457,28 @@ export default function Home() {
               <FlaskConical size={17} />
             </div>
             <div className="metric-value text-value">
-              {rows.length ? "Unverified" : "Pending"}
+              {illustrative
+                ? "Demo only"
+                : stats.interval
+                  ? "Exploratory"
+                  : rows.length
+                    ? "Insufficient"
+                    : "Pending"}
             </div>
             <p>
               {illustrative
                 ? "Synthetic data cannot establish change"
                 : rows.length
-                  ? "Inference requires dependence checks"
+                  ? stats.interval
+                    ? "Approximate 95% Newey–West interval"
+                    : "Inference requires 20 consecutive complete years"
                   : "No measured result to assess"}
             </p>
             <div className="metric-footer">
-              Uncertainty matters<span className="amber">NO CLAIM</span>
+              Uncertainty matters
+              <span className="amber">
+                {!illustrative && stats.interval ? "CONDITIONAL" : "NO CLAIM"}
+              </span>
             </div>
           </article>
         </section>
@@ -454,13 +504,21 @@ export default function Home() {
                 />
               </label>
             </div>
-            <MapView region={region} date={imageDate} onSelect={selectRegion} />
+            <MapView
+              region={region}
+              date={imageDate}
+              onSelect={selectRegion}
+              points={analyticalPoints}
+              index={index}
+            />
             <div className="map-legend">
               <span>
                 <i className="dot" /> Selected study location
               </span>
               <span>
-                True-color imagery · analytical {index} layer not connected
+                {analyticalPoints.features.length
+                  ? `Measured point means · ${index} · ${start}–${end}`
+                  : `True-color imagery · no measured ${index} points in selection`}
               </span>
             </div>
           </section>
@@ -755,11 +813,13 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            {answer && (
-              <div className="answer" role="status">
-                {answer}
-              </div>
-            )}
+            {answer &&
+              answerSelection ===
+                JSON.stringify([region, index, start, end, illustrative]) && (
+                <div className="answer" role="status">
+                  {answer}
+                </div>
+              )}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -781,6 +841,25 @@ export default function Home() {
               Answers distinguish evidence, interpretations and unknowns.
             </small>
           </section>
+          <AnalysisPanels
+            series={
+              illustrative
+                ? regions.map((r, i) => ({
+                    region: r.id,
+                    index,
+                    observations: demo(i, index),
+                  }))
+                : measured
+            }
+            rows={rows}
+            fullRows={fullRows}
+            region={region}
+            index={index}
+            start={start}
+            end={end}
+            demo={illustrative}
+            comparisons={comparisons}
+          />
           <section className="card climate-card">
             <div className="card-heading">
               <div>
@@ -795,7 +874,9 @@ export default function Home() {
                 {climateBusy ? "Loading…" : "Load climate"} <ArrowDownIcon />
               </button>
             </div>
-            {climate ? (
+            {climate &&
+            climate.requestRegion === region &&
+            climate.requestYear === end ? (
               <div className="climate-result">
                 {"error" in climate ? (
                   <p role="alert">{String(climate.error)}</p>
@@ -804,6 +885,16 @@ export default function Home() {
                     <p className="mint">
                       NASA POWER response received for {selected.name}.
                     </p>
+                    <ClimateChart
+                      year={end}
+                      parameter={
+                        (
+                          climate.properties as {
+                            parameter: Record<string, Record<string, number>>;
+                          }
+                        ).parameter
+                      }
+                    />
                     <div className="climate-months">
                       {Object.entries(
                         (
@@ -874,8 +965,10 @@ export default function Home() {
               <p>
                 Monthly means use valid observations without interpolation.
                 Descriptive OLS uses complete 12-month years, requiring at least
-                five. No confidence interval or significance is claimed until
-                temporal dependence is addressed.
+                five. Exploratory approximate 95% Newey–West intervals require
+                20 consecutive complete years and nondegenerate residuals.
+                Direction is supported only when the interval excludes zero;
+                assumptions and multiple-comparison limits remain visible.
               </p>
             </article>
             <article>
@@ -896,8 +989,10 @@ export default function Home() {
           </div>
           <p>
             {datasetStatus} AppEEARS requires Earthdata authentication and
-            processed observation import. Analytical raster and uncertainty
-            inference remain pending.
+            processed observation import. Measured point layers do not represent
+            spatial coverage; regional raster processing remains pending.
+            Bangladesh outline: geoBoundaries gbOpen, 2015, CC0, for geographic
+            context (not an official legal boundary).
           </p>
           <div className="source-links">
             <a

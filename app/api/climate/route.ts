@@ -22,12 +22,27 @@ export async function GET(req: NextRequest) {
     const data = z
       .object({
         properties: z.object({
-          parameter: z.record(z.string(), z.record(z.string(), z.number())),
+          parameter: z
+            .object({
+              T2M: z.record(z.string().regex(/^\d{6}$/), z.number().finite()),
+              PRECTOTCORR: z.record(
+                z.string().regex(/^\d{6}$/),
+                z.number().finite(),
+              ),
+            })
+            .refine(
+              (p) =>
+                Object.keys(p.T2M).length > 0 &&
+                Object.keys(p.PRECTOTCORR).length > 0,
+            ),
         }),
-        parameters: z.record(
-          z.string(),
-          z.object({ units: z.string(), longname: z.string() }),
-        ),
+        parameters: z.object({
+          T2M: z.object({ units: z.literal("C"), longname: z.string() }),
+          PRECTOTCORR: z.object({
+            units: z.literal("mm/day"),
+            longname: z.string(),
+          }),
+        }),
       })
       .parse(
         await (await nasaFetch(url, { next: { revalidate: 86400 } })).json(),

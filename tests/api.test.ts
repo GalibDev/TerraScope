@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 import { GET as vegetation } from "../app/api/vegetation/route";
 import { GET as climate } from "../app/api/climate/route";
@@ -7,11 +7,40 @@ import { datasetSchema } from "../lib/dataset";
 import { writeFile, unlink } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+beforeEach(() => {
+  vi.stubEnv("VEGETATION_DATA_URL", "");
+  vi.stubEnv("VEGETATION_DATA_PATH", "");
+});
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
 });
 describe("API states with mocked providers", () => {
+  it("handles unavailable remote dataset storage without inventing observations", async () => {
+    vi.stubEnv("VEGETATION_DATA_URL", "https://example.test/vegetation.json");
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(new Response("unavailable", { status: 503 })),
+    );
+    expect((await vegetation()).status).toBe(503);
+  });
+  it("never accepts browser-provided scientific statistics", async () => {
+    vi.stubEnv("AI_PROVIDER_API_KEY", "");
+    const r = await scientist(
+      new Request("http://localhost/api/scientist", {
+        method: "POST",
+        body: JSON.stringify({
+          question: "Explain my trend",
+          demo: true,
+          slope: 999,
+          interval: [998, 1000],
+        }),
+      }),
+    );
+    const data = await r.json();
+    expect(data.answer).toContain("No validated vegetation");
+    expect(data.answer).not.toContain("999");
+  });
   it("loads operator-provided observations with scaling and QA filtering", async () => {
     const path = join(tmpdir(), `terrascope-test-${crypto.randomUUID()}.json`);
     const fixture = {

@@ -1183,3 +1183,148 @@ footer > span:first-child {
     font-size: 8px;
   }
 }
+.inference-card {
+  grid-column: 1/-1;
+}
+.inference-content,
+.coverage-content {
+  padding: 0 20px 22px;
+}
+.inference-values {
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr 0.8fr;
+  gap: 20px;
+  padding: 18px;
+  background: #10292b;
+  border: 1px solid #28443f;
+  border-radius: 6px;
+}
+.inference-values small {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #88a5a9;
+  margin-bottom: 10px;
+}
+.inference-values b {
+  font-size: 16px;
+  font-weight: 400;
+}
+.inference-content > p,
+.coverage-content > p,
+.analysis-note {
+  font-size: 10px;
+  line-height: 1.9;
+  color: #89a6ad;
+}
+.inference-content > small {
+  font-size: 9px;
+  line-height: 1.8;
+  color: #83a197;
+}
+.table-scroll {
+  overflow: auto;
+  margin: 20px 0;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10px;
+  text-align: left;
+  white-space: nowrap;
+}
+th {
+  font-weight: 400;
+  color: #76959f;
+  padding: 12px 14px;
+  background: #10242c;
+}
+td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #21353e;
+  color: #adc7c5;
+}
+.analysis-note {
+  padding: 0 20px;
+}
+.coverage-number {
+  font-size: 30px;
+  color: #86cdb7;
+  margin: 8px 0 15px;
+}
+.coverage-number small {
+  font-size: 9px;
+  color: #819fa6;
+}
+progress {
+  width: 100%;
+  height: 6px;
+  accent-color: #4ce0ac;
+}
+.analytical-legend {
+  position: absolute;
+  bottom: 53px;
+  left: 12px;
+  background: #0a1c25eb;
+  padding: 10px;
+  border: 1px solid #48665c;
+  border-radius: 4px;
+  font-size: 8px;
+  color: #c3d8d0;
+  width: 220px;
+}
+.analytical-legend b {
+  font-weight: 400;
+}
+.analytical-legend > div {
+  height: 8px;
+  margin: 8px 0 4px;
+  background: linear-gradient(90deg, #83583d, #c9b977, #83c993, #08764a);
+}
+.analytical-legend > span {
+  display: flex;
+  justify-content: space-between;
+}
+.analytical-legend > small {
+  display: block;
+  margin-top: 8px;
+  font-size: 7px;
+  color: #86a49f;
+}
+.coverage-content dl {
+  margin: 15px 0;
+}
+.coverage-content dd {
+  max-width: 65%;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 620px) {
+  .inference-values {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .inference-values b {
+    font-size: 15px;
+  }
+  .inference-content,
+  .coverage-content {
+    padding: 0 14px 18px;
+  }
+  .inference-card .card-heading {
+    align-items: flex-start;
+  }
+  .inference-card .secondary {
+    font-size: 8px;
+    padding: 7px;
+  }
+  .map-top {
+    flex-wrap: wrap;
+  }
+  .analytical-legend {
+    width: 185px;
+  }
+  .coverage-number {
+    font-size: 26px;
+  }
+}
