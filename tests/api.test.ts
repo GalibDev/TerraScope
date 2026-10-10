@@ -12,6 +12,7 @@ beforeEach(() => {
   vi.stubEnv("VEGETATION_DATA_PATH", "");
 });
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
 });
@@ -77,6 +78,7 @@ describe("API states with mocked providers", () => {
     }
   });
   it("reports setup required without inventing observations", async () => {
+    vi.spyOn(process, "cwd").mockReturnValue(join(tmpdir(), crypto.randomUUID()));
     vi.stubEnv("VEGETATION_DATA_PATH", "");
     const r = await vegetation();
     expect((await r.json()).status).toBe("setup-required");
@@ -151,6 +153,7 @@ describe("API states with mocked providers", () => {
     ).toBe(true);
   });
   it("provides an honest scientist fallback without a key", async () => {
+    vi.spyOn(process, "cwd").mockReturnValue(join(tmpdir(), crypto.randomUUID()));
     vi.stubEnv("AI_PROVIDER_API_KEY", "");
     vi.stubEnv("VEGETATION_DATA_PATH", "");
     const r = await scientist(
