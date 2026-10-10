@@ -103,6 +103,7 @@ export default function Home() {
   const selectRegion = useCallback((id: string) => {
     setRegion(id);
     setClimate(null);
+    setAnswer("");
   }, []);
   async function ask(q = question) {
     if (!q.trim()) return;
@@ -111,7 +112,14 @@ export default function Home() {
       const r = await fetch("/api/scientist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q,region,index,start,end,demo:illustrative }),
+        body: JSON.stringify({
+          question: q,
+          region,
+          index,
+          start,
+          end,
+          demo: illustrative,
+        }),
       });
       const v = await r.json();
       setAnswer(v.answer || v.error);
@@ -355,7 +363,11 @@ export default function Home() {
             <div className="metric-footer">
               {selected.name}
               <span className="mint">
-                {illustrative ? "DEMO" : "NOT CONNECTED"}
+                {illustrative
+                  ? "DEMO"
+                  : rows.length
+                    ? "MODIS"
+                    : "NOT CONNECTED"}
               </span>
             </div>
           </article>

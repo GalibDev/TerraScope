@@ -10,7 +10,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "postinstall": "node scripts/prepare-map.mjs"
+    "postinstall": "node scripts/prepare-map.mjs",
+    "format": "prettier --write app components lib tests scripts *.ts *.mjs *.json README.md"
   },
   "repository": {
     "type": "git",
