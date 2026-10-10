@@ -1,0 +1,362 @@
+{
+  "_250m_16_days_EVI": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "16 day EVI average",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -3000,
+    "FillValueAll": [
+      -3000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_EVI",
+    "OrigDataType": "int16",
+    "OrigValidMax": 10000,
+    "OrigValidMin": -2000,
+    "QualityLayers": "['_250m_16_days_VI_Quality']",
+    "QualityProductAndVersion": "MOD13Q1.061",
+    "ScaleFactor": 0.0001,
+    "Units": "EVI",
+    "ValidMax": 1.0,
+    "ValidMin": -0.200000003,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_MIR_reflectance": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "250m 16 days MIR reflectance",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -1000,
+    "FillValueAll": [
+      -1000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_MIR_reflectance",
+    "OrigDataType": "int16",
+    "OrigValidMax": 10000,
+    "OrigValidMin": 0,
+    "QualityLayers": "['_250m_16_days_pixel_reliability']",
+    "QualityProductAndVersion": "MOD13Q1.061",
+    "ScaleFactor": 0.0001,
+    "Units": "",
+    "ValidMax": 1.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_NDVI": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "16 day NDVI average",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -3000,
+    "FillValueAll": [
+      -3000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_NDVI",
+    "OrigDataType": "int16",
+    "OrigValidMax": 10000,
+    "OrigValidMin": -2000,
+    "QualityLayers": "['_250m_16_days_VI_Quality']",
+    "QualityProductAndVersion": "MOD13Q1.061",
+    "ScaleFactor": 0.0001,
+    "Units": "NDVI",
+    "ValidMax": 1.0,
+    "ValidMin": -0.200000003,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_NIR_reflectance": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "250m 16 days NIR reflectance",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -1000,
+    "FillValueAll": [
+      -1000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_NIR_reflectance",
+    "OrigDataType": "int16",
+    "OrigValidMax": 10000,
+    "OrigValidMin": 0,
+    "QualityLayers": "['_250m_16_days_pixel_reliability']",
+    "QualityProductAndVersion": "MOD13Q1.061",
+    "ScaleFactor": 0.0001,
+    "Units": "",
+    "ValidMax": 1.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_VI_Quality": {
+    "AddOffset": "",
+    "Available": true,
+    "DataType": "uint16",
+    "Description": "250m 16 days VI Quality",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": 65535,
+    "FillValueAll": [
+      65535
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": true,
+    "Layer": "_250m_16_days_VI_Quality",
+    "OrigDataType": "uint16",
+    "OrigValidMax": 65534,
+    "OrigValidMin": 0,
+    "QualityLayers": "",
+    "QualityProductAndVersion": "",
+    "ScaleFactor": "",
+    "Units": "",
+    "ValidMax": 65534.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_blue_reflectance": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "250m 16 days blue reflectance",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -1000,
+    "FillValueAll": [
+      -1000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_blue_reflectance",
+    "OrigDataType": "int16",
+    "OrigValidMax": 10000,
+    "OrigValidMin": 0,
+    "QualityLayers": "['_250m_16_days_pixel_reliability']",
+    "QualityProductAndVersion": "MOD13Q1.061",
+    "ScaleFactor": 0.0001,
+    "Units": "",
+    "ValidMax": 1.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_composite_day_of_the_year": {
+    "AddOffset": "",
+    "Available": true,
+    "DataType": "int16",
+    "Description": "250m 16 days composite day of the year",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -1,
+    "FillValueAll": [
+      -1
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_composite_day_of_the_year",
+    "OrigDataType": "int16",
+    "OrigValidMax": 366,
+    "OrigValidMin": 1,
+    "QualityLayers": "",
+    "QualityProductAndVersion": "",
+    "ScaleFactor": "",
+    "Units": "",
+    "ValidMax": 366.0,
+    "ValidMin": 1.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_pixel_reliability": {
+    "AddOffset": "",
+    "Available": true,
+    "DataType": "int32",
+    "Description": "250m 16 days pixel reliability",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -1,
+    "FillValueAll": [
+      -1
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": true,
+    "Layer": "_250m_16_days_pixel_reliability",
+    "OrigDataType": "int32",
+    "OrigValidMax": 3,
+    "OrigValidMin": 0,
+    "QualityLayers": "",
+    "QualityProductAndVersion": "",
+    "ScaleFactor": "",
+    "Units": "",
+    "ValidMax": 3.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_red_reflectance": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "250m 16 days red reflectance",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -1000,
+    "FillValueAll": [
+      -1000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_red_reflectance",
+    "OrigDataType": "int16",
+    "OrigValidMax": 10000,
+    "OrigValidMin": 0,
+    "QualityLayers": "['_250m_16_days_pixel_reliability']",
+    "QualityProductAndVersion": "MOD13Q1.061",
+    "ScaleFactor": 0.0001,
+    "Units": "",
+    "ValidMax": 1.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_relative_azimuth_angle": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "250m 16 days relative azimuth angle",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -4000,
+    "FillValueAll": [
+      -4000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_relative_azimuth_angle",
+    "OrigDataType": "int16",
+    "OrigValidMax": 18000,
+    "OrigValidMin": -18000,
+    "QualityLayers": "",
+    "QualityProductAndVersion": "",
+    "ScaleFactor": 0.01,
+    "Units": "",
+    "ValidMax": 180.0,
+    "ValidMin": -180.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_sun_zenith_angle": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "250m 16 days sun zenith angle",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -10000,
+    "FillValueAll": [
+      -10000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_sun_zenith_angle",
+    "OrigDataType": "int16",
+    "OrigValidMax": 18000,
+    "OrigValidMin": 0,
+    "QualityLayers": "",
+    "QualityProductAndVersion": "",
+    "ScaleFactor": 0.01,
+    "Units": "",
+    "ValidMax": 180.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  },
+  "_250m_16_days_view_zenith_angle": {
+    "AddOffset": 0.0,
+    "Available": true,
+    "DataType": "float32",
+    "Description": "250m 16 days view zenith angle",
+    "Dimensions": [
+      "time",
+      "YDim",
+      "XDim"
+    ],
+    "FillValue": -10000,
+    "FillValueAll": [
+      -10000
+    ],
+    "Group": "",
+    "Info": {},
+    "IsQA": false,
+    "Layer": "_250m_16_days_view_zenith_angle",
+    "OrigDataType": "int16",
+    "OrigValidMax": 18000,
+    "OrigValidMin": 0,
+    "QualityLayers": "",
+    "QualityProductAndVersion": "",
+    "ScaleFactor": 0.01,
+    "Units": "",
+    "ValidMax": 180.0,
+    "ValidMin": 0.0,
+    "XSize": 4800,
+    "YSize": 4800
+  }
+}
