@@ -81,3 +81,33 @@ export async function bundle(token: string, id: string) {
     })
   ).json();
 }
+export async function downloadFile(
+  token: string,
+  taskId: string,
+  fileId: string,
+) {
+  if (![taskId, fileId].every((id) => /^[a-zA-Z0-9-]{1,80}$/.test(id)))
+    throw Error("Invalid task or file ID");
+  // Fetch strips Authorization on cross-origin redirects; it must never reach the signed S3 destination.
+  const response = await nasaFetch(`${base}/bundle/${taskId}/${fileId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+  if (Number(response.headers.get("content-length")) > 20_000_000)
+    throw Error("Download too large");
+  const reader = response.body?.getReader();
+  if (!reader) throw Error("Empty download");
+  let size = 0;
+  const chunks: Uint8Array[] = [];
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    size += value.length;
+    if (size > 20_000_000) {
+      await reader.cancel();
+      throw Error("Download too large");
+    }
+    chunks.push(value);
+  }
+  return Buffer.concat(chunks);
+}

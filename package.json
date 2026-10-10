@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "postinstall": "node scripts/prepare-map.mjs",
-    "format": "prettier --write app components lib tests scripts *.ts *.mjs *.json README.md"
+    "format": "prettier --write app components lib tests scripts *.ts *.mjs *.json README.md",
+    "modis": "node --conditions=react-server --env-file-if-exists=.env.local --import tsx scripts/modis.ts"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   },
   "homepage": "https://github.com/GalibDev/TerraScope#readme",
   "dependencies": {
+    "csv-parse": "^7.0.3",
     "lucide-react": "^1.55.0",
     "maplibre-gl": "^6.13.0",
     "next": "^16.4.0",
@@ -43,7 +45,11 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.4.0",
     "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3"
+  },
+  "engines": {
+    "node": ">=22.10.0"
   }
 }

@@ -6,3 +6,5 @@ coverage/
 *.tsbuildinfo
 /public/maplibre-worker.mjs
 audit-report.tmp.json
+.terrascope/
+/data/*.tmp
