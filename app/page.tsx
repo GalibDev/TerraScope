@@ -47,7 +47,7 @@ const links = [
   ["Interactive map", MapIcon, "map"],
   ["Trend detective", ChartNoAxesCombined, "trends"],
   ["Region comparison", Layers, "regions"],
-  ["AI Earth scientist", Sparkles, "scientist"],
+  ["Explain results", FlaskConical, "scientist"],
   ["Methodology", BookOpen, "methodology"],
   ["Data sources", Database, "sources"],
 ] as const;
@@ -196,10 +196,10 @@ export default function Home() {
     URL.revokeObjectURL(u);
   }
   const chartStyle = {
-    background: "#10232c",
-    border: "1px solid #29404b",
+    background: "#FDFCF8",
+    border: "1px solid #DCDDD4",
     borderRadius: 8,
-    color: "#e7f5f2",
+    color: "#202C29",
   };
   return (
     <>
@@ -254,10 +254,10 @@ export default function Home() {
         <div className="sidebar-note">
           <Globe2 size={26} />
           <strong>
-            One planet.
-            <br />A world of change.
+            Bangladesh,
+            <br />in context.
           </strong>
-          <p>Explore the signals hidden in Earth’s vegetation.</p>
+          <p>Compare four study locations through a consistent scientific method.</p>
           <a href="#sources">
             Powered by NASA data <ArrowUpRight size={12} />
           </a>
@@ -274,12 +274,11 @@ export default function Home() {
         <div className="page-heading">
           <div>
             <div className="eyebrow">
-              <span /> OUR CHANGING PLANET
+              <span /> EARTH OBSERVATION ATLAS
             </div>
-            <h1>See Earth’s green story.</h1>
+            <h1>Vegetation change<span className="heading-period">{start}—{end}</span></h1>
             <p>
-              Discover where vegetation is changing. Start with Bangladesh.
-              Explore the world.
+              {selected.name} · MODIS vegetation indices · Quality, coverage and uncertainty.
             </p>
           </div>
           <button
@@ -376,6 +375,89 @@ export default function Home() {
             <ArrowRight size={14} />
           </a>
         </div>
+        <div className="dashboard-grid">
+          <section className="card map-card" id="map">
+            <div className="card-heading">
+              <div>
+                <h2>
+                  <Globe2 size={18} /> Study area & satellite context
+                </h2>
+                <p>Satellite context for your selected study point</p>
+              </div>
+              <label className="small-date">
+                Imagery date
+                <input
+                  type="date"
+                  value={imageDate}
+                  max="2024-12-31"
+                  min="2003-01-01"
+                  onChange={(e) =>
+                    e.target.value && setImageDate(e.target.value)
+                  }
+                />
+              </label>
+            </div>
+            <MapView
+              region={region}
+              date={imageDate}
+              onSelect={selectRegion}
+              points={analyticalPoints}
+              index={index}
+            />
+            <div className="map-legend">
+              <span>
+                <i className="dot" /> Selected study location
+              </span>
+              <span>
+                {analyticalPoints.features.length
+                  ? `Measured point means · ${index} · ${start}–${end}`
+                  : `True-color imagery · no measured ${index} points in selection`}
+              </span>
+            </div>
+          </section>
+          <section className="card study-card">
+            <div className="eyebrow">REGION SPOTLIGHT</div>
+            <div className="study-symbol">
+              <Leaf size={34} />
+            </div>
+            <h2>{selected.name}</h2>
+            <p>{selected.label.toLowerCase()} · representative study point</p>
+            <div className="coordinate">
+              {selected.center[1].toFixed(4)}° N <span>/</span>{" "}
+              {selected.center[0].toFixed(4)}° E
+            </div>
+            <dl>
+              <div>
+                <dt>Dataset</dt>
+                <dd>MOD13Q1.061</dd>
+              </div>
+              <div>
+                <dt>Spatial resolution</dt>
+                <dd>250 meters</dd>
+              </div>
+              <div>
+                <dt>Source cadence</dt>
+                <dd>16-day composite</dd>
+              </div>
+              <div>
+                <dt>Trend assessment</dt>
+                <dd className="amber">
+                  {illustrative
+                    ? "Demo only"
+                    : rows.length
+                      ? "Descriptive only"
+                      : "Awaiting data"}
+                </dd>
+              </div>
+            </dl>
+            <div className="study-callout">
+              <FlaskConical size={17} />
+              <span>
+                A study point is not a regional average. Land use and seasonal
+                differences affect comparisons.
+              </span>
+            </div>
+          </section>
         <section className="metrics">
           <article>
             <div className="metric-label">
@@ -482,89 +564,6 @@ export default function Home() {
             </div>
           </article>
         </section>
-        <div className="dashboard-grid">
-          <section className="card map-card" id="map">
-            <div className="card-heading">
-              <div>
-                <h2>
-                  <Globe2 size={18} /> A closer look at Earth
-                </h2>
-                <p>Satellite context for your selected study point</p>
-              </div>
-              <label className="small-date">
-                Imagery date
-                <input
-                  type="date"
-                  value={imageDate}
-                  max="2024-12-31"
-                  min="2003-01-01"
-                  onChange={(e) =>
-                    e.target.value && setImageDate(e.target.value)
-                  }
-                />
-              </label>
-            </div>
-            <MapView
-              region={region}
-              date={imageDate}
-              onSelect={selectRegion}
-              points={analyticalPoints}
-              index={index}
-            />
-            <div className="map-legend">
-              <span>
-                <i className="dot" /> Selected study location
-              </span>
-              <span>
-                {analyticalPoints.features.length
-                  ? `Measured point means · ${index} · ${start}–${end}`
-                  : `True-color imagery · no measured ${index} points in selection`}
-              </span>
-            </div>
-          </section>
-          <section className="card study-card">
-            <div className="eyebrow">REGION SPOTLIGHT</div>
-            <div className="study-symbol">
-              <Leaf size={34} />
-            </div>
-            <h2>{selected.name}</h2>
-            <p>{selected.label.toLowerCase()} · representative study point</p>
-            <div className="coordinate">
-              {selected.center[1].toFixed(4)}° N <span>/</span>{" "}
-              {selected.center[0].toFixed(4)}° E
-            </div>
-            <dl>
-              <div>
-                <dt>Dataset</dt>
-                <dd>MOD13Q1.061</dd>
-              </div>
-              <div>
-                <dt>Spatial resolution</dt>
-                <dd>250 meters</dd>
-              </div>
-              <div>
-                <dt>Source cadence</dt>
-                <dd>16-day composite</dd>
-              </div>
-              <div>
-                <dt>Trend assessment</dt>
-                <dd className="amber">
-                  {illustrative
-                    ? "Demo only"
-                    : rows.length
-                      ? "Descriptive only"
-                      : "Awaiting data"}
-                </dd>
-              </div>
-            </dl>
-            <div className="study-callout">
-              <FlaskConical size={17} />
-              <span>
-                A study point is not a regional average. Land use and seasonal
-                differences affect comparisons.
-              </span>
-            </div>
-          </section>
           <section className="card trend-card" id="trends">
             <div className="card-heading">
               <div>
@@ -590,31 +589,31 @@ export default function Home() {
                       <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
                         <stop
                           offset="0%"
-                          stopColor="#4ce0ac"
+                          stopColor="#285B47"
                           stopOpacity={0.3}
                         />
                         <stop
                           offset="100%"
-                          stopColor="#4ce0ac"
+                          stopColor="#285B47"
                           stopOpacity={0}
                         />
                       </linearGradient>
                     </defs>
                     <CartesianGrid
                       vertical={false}
-                      stroke="#20353e"
+                      stroke="#E3E4DB"
                       strokeDasharray="3 4"
                     />
                     <XAxis
                       dataKey="date"
                       minTickGap={70}
                       tickFormatter={(v) => v.slice(0, 4)}
-                      stroke="#7b939c"
+                      stroke="#5C6C63"
                       fontSize={10}
                     />
                     <YAxis
                       domain={[-0.2, 1]}
-                      stroke="#7b939c"
+                      stroke="#5C6C63"
                       fontSize={10}
                       width={35}
                     />
@@ -623,7 +622,7 @@ export default function Home() {
                       type="monotone"
                       dataKey="value"
                       name={`${index} (${illustrative ? "synthetic" : "measured"})`}
-                      stroke="#4ce0ac"
+                      stroke="#285B47"
                       fill="url(#green)"
                       strokeWidth={1.7}
                     />
@@ -646,7 +645,7 @@ export default function Home() {
           <section className="card seasonal-card">
             <div className="card-heading">
               <div>
-                <h2>Earth has a rhythm</h2>
+                <h2>Seasonal profile</h2>
                 <p>Seasonal profile · monthly mean {index}</p>
               </div>
               <span className="pill">JAN — DEC</span>
@@ -655,11 +654,11 @@ export default function Home() {
               <div className="chart">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={season}>
-                    <CartesianGrid vertical={false} stroke="#20353e" />
-                    <XAxis dataKey="month" stroke="#7b939c" fontSize={10} />
+                    <CartesianGrid vertical={false} stroke="#E3E4DB" />
+                    <XAxis dataKey="month" stroke="#5C6C63" fontSize={10} />
                     <YAxis
                       domain={[-0.2, 1]}
-                      stroke="#7b939c"
+                      stroke="#5C6C63"
                       fontSize={10}
                       width={30}
                     />
@@ -667,7 +666,7 @@ export default function Home() {
                     <Bar
                       dataKey="value"
                       name={`${illustrative ? "Synthetic" : "Measured"} ${index}`}
-                      fill="#4ba998"
+                      fill="#60856C"
                       radius={[4, 4, 0, 0]}
                     />
                   </BarChart>
@@ -737,17 +736,17 @@ export default function Home() {
                       ),
                     }))}
                   >
-                    <CartesianGrid vertical={false} stroke="#20353e" />
+                    <CartesianGrid vertical={false} stroke="#E3E4DB" />
                     <XAxis
                       dataKey="date"
                       minTickGap={80}
                       tickFormatter={(v) => v.slice(0, 4)}
-                      stroke="#7b939c"
+                      stroke="#5C6C63"
                       fontSize={10}
                     />
                     <YAxis
                       domain={[-0.2, 1]}
-                      stroke="#7b939c"
+                      stroke="#5C6C63"
                       fontSize={10}
                       width={35}
                     />
@@ -783,16 +782,16 @@ export default function Home() {
             <div className="card-heading">
               <div>
                 <h2>
-                  <Sparkles size={18} /> Your AI Earth scientist
+                  <Sparkles size={18} /> Explain this result
                 </h2>
-                <p>Better questions. More thoughtful exploration.</p>
+                <p>Reference guidance for your current study selection.</p>
               </div>
               <span className="new">SCIENCE FIRST</span>
             </div>
             <p className="scientist-intro">
-              Make sense of the signals.
+              Questions about the evidence?
               <br />
-              <span>Keep the uncertainty in view.</span>
+              <span>Explore the method and its limits.</span>
             </p>
             <div className="prompts">
               {[
