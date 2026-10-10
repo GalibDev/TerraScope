@@ -52,7 +52,7 @@ describe("MODIS documented raw formats (synthetic fixtures)", () => {
       value: 0.3 + (+r.date.slice(0, 4) - 2001) * 0.01,
     }));
     expect(trend(r).slope).toBeCloseTo(0.01);
-    expect(trend(r).classification).toBe("No clear directional trend");
+    expect(trend(r).classification).toBe("Insufficient data");
     expect(trend(r).interval).toBeNull();
   });
   it("requires five complete years", () => {

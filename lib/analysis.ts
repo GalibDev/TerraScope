@@ -5,6 +5,18 @@ export const rawSchema = z.object({
   qa: z.number().int().min(0).max(65535),
 });
 export type Observation = { date: string; value: number };
+export type Classification =
+  "Greening" | "Browning" | "No clear directional trend" | "Insufficient data";
+export type TrendResult = {
+  slope: number | null;
+  classification: Classification;
+  n: number;
+  interval: [number, number] | null;
+  standardError: number | null;
+  lag: number | null;
+  reason: string;
+  annual: { year: number; value: number }[];
+};
 export function prepare(input: unknown[], scaled = false): Observation[] {
   const seen = new Set<string>();
   const out: Observation[] = [];
@@ -40,7 +52,9 @@ export function monthly(rows: Observation[]) {
     count: v.length,
   }));
 }
-export function trend(rows: Observation[]) {
+export function trend(rows: Observation[]): TrendResult {
+  // Equal-weight monthly means prevent a month with more composites receiving more annual weight.
+  rows = monthly(rows);
   const annual = new Map<string, Observation[]>();
   for (const r of rows)
     annual.set(r.date.slice(0, 4), [
@@ -52,25 +66,91 @@ export function trend(rows: Observation[]) {
     .map(([year, r]) => ({
       x: +year,
       y: r.reduce((s, x) => s + x.value, 0) / r.length,
-    }));
+    }))
+    .sort((a, b) => a.x - b.x);
   const n = complete.length;
+  const annualValues = complete.map((r) => ({ year: r.x, value: r.y }));
   if (n < 5)
     return {
       slope: null,
       classification: "Insufficient data",
       n,
       interval: null,
+      standardError: null,
+      lag: null,
+      reason:
+        "At least five complete 12-month years are required for a descriptive slope.",
+      annual: annualValues,
     };
   const mx = complete.reduce((s, r) => s + r.x, 0) / n,
     my = complete.reduce((s, r) => s + r.y, 0) / n;
   const xx = complete.reduce((s, r) => s + (r.x - mx) ** 2, 0),
     slope = complete.reduce((s, r) => s + (r.x - mx) * (r.y - my), 0) / xx;
-  // Descriptive OLS only: temporal dependence not established; no unsupported significance label.
-  return {
+  const descriptive: TrendResult = {
     slope,
-    classification: "No clear directional trend",
+    classification: "Insufficient data",
     n,
     interval: null,
+    standardError: null,
+    lag: null,
+    reason:
+      "Inference requires at least 20 consecutive complete years; slope is descriptive only.",
+    annual: annualValues,
+  };
+  if (n < 20 || complete.some((r, i) => i > 0 && r.x !== complete[i - 1].x + 1))
+    return descriptive;
+  const residual = complete.map((r) => r.y - my - slope * (r.x - mx));
+  if (residual.reduce((s, e) => s + e * e, 0) < 1e-16)
+    return {
+      ...descriptive,
+      reason:
+        "Degenerate residual variance; uncertainty cannot be reliably estimated.",
+    };
+  // Newey–West sandwich for slope with centered regressor, Bartlett kernel and n/(n−2) correction.
+  // Annual rows must be consecutive: gaps are never compressed into adjacent observations.
+  const lag = Math.floor(4 * (n / 100) ** (2 / 9));
+  const score = complete.map((r, i) => (r.x - mx) * residual[i]);
+  let meat = score.reduce((s, v) => s + v * v, 0);
+  for (let l = 1; l <= lag; l++) {
+    let cross = 0;
+    for (let t = l; t < n; t++) cross += score[t] * score[t - l];
+    meat += 2 * (1 - l / (lag + 1)) * cross;
+  }
+  const variance = ((meat / (xx * xx)) * n) / (n - 2);
+  if (!Number.isFinite(variance) || variance <= 0)
+    return { ...descriptive, reason: "HAC covariance could not be estimated." };
+  const standardError = Math.sqrt(variance),
+    interval: [number, number] = [
+      slope - 1.959963984540054 * standardError,
+      slope + 1.959963984540054 * standardError,
+    ];
+  return {
+    slope,
+    n,
+    interval,
+    standardError,
+    lag,
+    annual: annualValues,
+    classification:
+      interval[0] > 0
+        ? "Greening"
+        : interval[1] < 0
+          ? "Browning"
+          : "No clear directional trend",
+    reason:
+      "Approximate 95% Newey–West interval; exploratory, unadjusted for multiple comparisons. Assumes a stable linear trend and short-memory residuals.",
+  };
+}
+export function coverage(input: unknown[], scaled = false) {
+  const valid = prepare(input, scaled);
+  const months = new Set(valid.map((r) => r.date.slice(0, 7)));
+  return {
+    submitted: input.length,
+    accepted: valid.length,
+    excluded: input.length - valid.length,
+    observedMonths: months.size,
+    first: valid[0]?.date ?? null,
+    last: valid.at(-1)?.date ?? null,
   };
 }
 export function seasonal(rows: Observation[]) {
