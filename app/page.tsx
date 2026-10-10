@@ -42,9 +42,14 @@ const MapView = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => <div className="map loading">Loading Earth imagery…</div>,
 });
+const SundarbansComparison = dynamic(
+  () => import("@/components/SundarbansComparison"),
+  { ssr: false },
+);
 const links = [
   ["Overview", LayoutDashboard, "overview"],
   ["Interactive map", MapIcon, "map"],
+  ["Sundarbans comparison", Layers, "sundarbans"],
   ["Trend detective", ChartNoAxesCombined, "trends"],
   ["Region comparison", Layers, "regions"],
   ["Explain results", FlaskConical, "scientist"],
@@ -248,16 +253,19 @@ export default function Home() {
           >
             <Icon size={18} />
             {label}
-            {i === 4 && <span className="new">AI</span>}
+            {id === "scientist" && <span className="new">AI</span>}
           </a>
         ))}
         <div className="sidebar-note">
           <Globe2 size={26} />
           <strong>
             Bangladesh,
-            <br />in context.
+            <br />
+            in context.
           </strong>
-          <p>Compare four study locations through a consistent scientific method.</p>
+          <p>
+            Compare four study locations through a consistent scientific method.
+          </p>
           <a href="#sources">
             Powered by NASA data <ArrowUpRight size={12} />
           </a>
@@ -276,9 +284,15 @@ export default function Home() {
             <div className="eyebrow">
               <span /> EARTH OBSERVATION ATLAS
             </div>
-            <h1>Vegetation change<span className="heading-period">{start}—{end}</span></h1>
+            <h1>
+              Vegetation change
+              <span className="heading-period">
+                {start}—{end}
+              </span>
+            </h1>
             <p>
-              {selected.name} · MODIS vegetation indices · Quality, coverage and uncertainty.
+              {selected.name} · MODIS vegetation indices · Quality, coverage and
+              uncertainty.
             </p>
           </div>
           <button
@@ -458,112 +472,113 @@ export default function Home() {
               </span>
             </div>
           </section>
-        <section className="metrics">
-          <article>
-            <div className="metric-label">
-              MEAN {index}
-              <Leaf size={17} />
-            </div>
-            <div className="metric-value">
-              {rows.length
-                ? (data.reduce((s, r) => s + r.value, 0) / data.length).toFixed(
-                    3,
-                  )
-                : "—"}
-              <small>{index} units</small>
-            </div>
-            <p>
-              {illustrative
-                ? "Synthetic study-point average"
-                : rows.length
-                  ? "Quality-filtered study-point average"
-                  : "Awaiting validated observations"}
-            </p>
-            <div className="metric-footer">
-              {selected.name}
-              <span className="mint">
+          <section className="metrics">
+            <article>
+              <div className="metric-label">
+                MEAN {index}
+                <Leaf size={17} />
+              </div>
+              <div className="metric-value">
+                {rows.length
+                  ? (
+                      data.reduce((s, r) => s + r.value, 0) / data.length
+                    ).toFixed(3)
+                  : "—"}
+                <small>{index} units</small>
+              </div>
+              <p>
                 {illustrative
-                  ? "DEMO"
+                  ? "Synthetic study-point average"
                   : rows.length
-                    ? "MODIS"
-                    : "NOT CONNECTED"}
-              </span>
-            </div>
-          </article>
-          <article>
-            <div className="metric-label">
-              LONG-TERM CHANGE
-              <ChartNoAxesCombined size={17} />
-            </div>
-            <div className="metric-value">
-              {stats.slope === null
-                ? "—"
-                : `${stats.slope >= 0 ? "+" : ""}${stats.slope.toFixed(4)}`}
-              <small>units / year</small>
-            </div>
-            <p>
-              {stats.slope === null
-                ? "Insufficient evidence"
-                : stats.interval
-                  ? "OLS · approximate HAC uncertainty"
-                  : "Descriptive OLS · insufficient inference evidence"}
-            </p>
-            <div className="metric-footer">
-              Complete-year means<span>{stats.n} years</span>
-            </div>
-          </article>
-          <article>
-            <div className="metric-label">
-              VALID OBSERVATIONS
-              <Layers size={17} />
-            </div>
-            <div className="metric-value">
-              {rows.length || "—"}
-              <small>observations</small>
-            </div>
-            <p>
-              {illustrative
-                ? "Synthetic monthly values · no gaps"
-                : rows.length
-                  ? "Quality-filtered records · no interpolation"
-                  : "Strict quality filtering required"}
-            </p>
-            <div className="metric-footer">
-              {start}–{end}
-              <span>250 m · 16-day source</span>
-            </div>
-          </article>
-          <article>
-            <div className="metric-label">
-              TREND CONFIDENCE
-              <FlaskConical size={17} />
-            </div>
-            <div className="metric-value text-value">
-              {illustrative
-                ? "Demo only"
-                : stats.interval
-                  ? "Exploratory"
+                    ? "Quality-filtered study-point average"
+                    : "Awaiting validated observations"}
+              </p>
+              <div className="metric-footer">
+                {selected.name}
+                <span className="mint">
+                  {illustrative
+                    ? "DEMO"
+                    : rows.length
+                      ? "MODIS"
+                      : "NOT CONNECTED"}
+                </span>
+              </div>
+            </article>
+            <article>
+              <div className="metric-label">
+                LONG-TERM CHANGE
+                <ChartNoAxesCombined size={17} />
+              </div>
+              <div className="metric-value">
+                {stats.slope === null
+                  ? "—"
+                  : `${stats.slope >= 0 ? "+" : ""}${stats.slope.toFixed(4)}`}
+                <small>units / year</small>
+              </div>
+              <p>
+                {stats.slope === null
+                  ? "Insufficient evidence"
+                  : stats.interval
+                    ? "OLS · approximate HAC uncertainty"
+                    : "Descriptive OLS · insufficient inference evidence"}
+              </p>
+              <div className="metric-footer">
+                Complete-year means<span>{stats.n} years</span>
+              </div>
+            </article>
+            <article>
+              <div className="metric-label">
+                VALID OBSERVATIONS
+                <Layers size={17} />
+              </div>
+              <div className="metric-value">
+                {rows.length || "—"}
+                <small>observations</small>
+              </div>
+              <p>
+                {illustrative
+                  ? "Synthetic monthly values · no gaps"
                   : rows.length
-                    ? "Insufficient"
-                    : "Pending"}
-            </div>
-            <p>
-              {illustrative
-                ? "Synthetic data cannot establish change"
-                : rows.length
-                  ? stats.interval
-                    ? "Approximate 95% Newey–West interval"
-                    : "Inference requires 20 consecutive complete years"
-                  : "No measured result to assess"}
-            </p>
-            <div className="metric-footer">
-              Uncertainty matters
-              <span className="amber">
-                {!illustrative && stats.interval ? "CONDITIONAL" : "NO CLAIM"}
-              </span>
-            </div>
-          </article>
-        </section>
+                    ? "Quality-filtered records · no interpolation"
+                    : "Strict quality filtering required"}
+              </p>
+              <div className="metric-footer">
+                {start}–{end}
+                <span>250 m · 16-day source</span>
+              </div>
+            </article>
+            <article>
+              <div className="metric-label">
+                TREND CONFIDENCE
+                <FlaskConical size={17} />
+              </div>
+              <div className="metric-value text-value">
+                {illustrative
+                  ? "Demo only"
+                  : stats.interval
+                    ? "Exploratory"
+                    : rows.length
+                      ? "Insufficient"
+                      : "Pending"}
+              </div>
+              <p>
+                {illustrative
+                  ? "Synthetic data cannot establish change"
+                  : rows.length
+                    ? stats.interval
+                      ? "Approximate 95% Newey–West interval"
+                      : "Inference requires 20 consecutive complete years"
+                    : "No measured result to assess"}
+              </p>
+              <div className="metric-footer">
+                Uncertainty matters
+                <span className="amber">
+                  {!illustrative && stats.interval ? "CONDITIONAL" : "NO CLAIM"}
+                </span>
+              </div>
+            </article>
+          </section>
+          <SundarbansComparison />
           <section className="card trend-card" id="trends">
             <div className="card-heading">
               <div>
