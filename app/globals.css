@@ -1950,6 +1950,9 @@ footer {
   height: 450px;
   position: relative;
   background: #e6e6dc;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid #c9cebf;
 }
 .comparison-map .comparison-canvas {
   position: absolute;

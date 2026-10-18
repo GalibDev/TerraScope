@@ -132,9 +132,18 @@ export default function SundarbansComparison() {
           [e, n],
         ],
         fitBoundsOptions: { padding: 20 },
+        maxBounds: [
+          [w, s],
+          [e, n],
+        ],
+        renderWorldCopies: false,
+        dragRotate: false,
+        pitchWithRotate: false,
+        maxPitch: 0,
         attributionControl: { compact: true },
       });
       maps.current.push(base);
+      base.touchZoomRotate.disableRotation();
       const top = new maplibregl.Map({
         container: topEl.current,
         style: style(true),
