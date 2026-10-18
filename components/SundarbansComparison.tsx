@@ -54,6 +54,15 @@ export default function SundarbansComparison() {
   const baseEl = useRef<HTMLDivElement>(null),
     topEl = useRef<HTMLDivElement>(null);
   const maps = useRef<maplibregl.Map[]>([]);
+  const dividerDrag = useRef(false);
+  const [analysisOpen, setAnalysisOpen] = useState(true);
+  const updateDivider = (clientX: number) => {
+    const rect = baseEl.current?.getBoundingClientRect();
+    if (rect)
+      setSplit(
+        Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100)),
+      );
+  };
   useEffect(() => {
     fetch("/data/sundarbans/manifest.json")
       .then((r) => {
@@ -111,7 +120,7 @@ export default function SundarbansComparison() {
           {
             id: "background",
             type: "background",
-            paint: { "background-color": "#E6E6DC" },
+            paint: { "background-color": "#10232e" },
           },
           ...[overlay ? "after" : "before", ...(overlay ? [] : ["change"])].map(
             (name) => ({
@@ -202,6 +211,7 @@ export default function SundarbansComparison() {
           return;
         }
         setCell({ row, col });
+        setAnalysisOpen(true);
         const dx = (right - left) / data.width!,
           dy = (topBound - bottom) / data.height!;
         const toLngLat = (px: number, py: number) => [
@@ -279,7 +289,7 @@ export default function SundarbansComparison() {
       <div className="card-heading">
         <div>
           <div className="eyebrow">SPATIAL COMPARISON · MOD13Q1.061</div>
-          <h2>Sundarbans, then & now</h2>
+          <h2>Sundarbans comparison</h2>
           <p>2001–2005 versus 2020–2024 · Jan / Feb / Nov / Dec · NDVI</p>
         </div>
       </div>
@@ -295,9 +305,11 @@ export default function SundarbansComparison() {
         {data?.status !== "available" ? (
           <div className="comparison-pending">
             <b>
-              {data
-                ? "NASA area extraction is processing"
-                : "Loading comparison status…"}
+              {error
+                ? "Comparison unavailable"
+                : data
+                  ? "NASA area extraction is processing"
+                  : "Loading measured comparison…"}
             </b>
             <p>
               The before/after raster has not been published yet. No synthetic
@@ -321,163 +333,257 @@ export default function SundarbansComparison() {
                 forest-change claim is supported.
               </p>
             )}
-            <div className="comparison-controls">
-              <button
-                className="secondary"
-                aria-pressed={selecting}
-                onClick={() => setSelecting(!selecting)}
-              >
-                {selecting ? "Done selecting" : "Select pixel"}
-              </button>
-              <button
-                className="secondary"
-                aria-pressed={mode === "compare"}
-                onClick={() => setMode("compare")}
-              >
-                Before / after
-              </button>
-              <button
-                className="secondary"
-                aria-pressed={mode === "change"}
-                onClick={() => setMode("change")}
-              >
-                NDVI change
-              </button>
-              <span>
-                {selecting
-                  ? "Click or tap one pixel · zoom in for precision"
-                  : "Drag the divider · click a pixel for values"}
-              </span>
-            </div>
-            <div className="comparison-map">
-              <div
-                ref={baseEl}
-                className="comparison-canvas"
-                aria-label="Measured Sundarbans NDVI comparison map"
-              />
-              <div
-                ref={topEl}
-                className="comparison-canvas comparison-overlay"
-                aria-hidden="true"
-                style={{
-                  clipPath: `inset(0 0 0 ${split}%)`,
-                  visibility: mode === "compare" ? "visible" : "hidden",
-                }}
-              />
-              {mode === "compare" && (
-                <>
+            <div className="comparison-workspace">
+              <div className="comparison-main">
+                <div className="comparison-controls">
+                  <button
+                    className="secondary"
+                    aria-pressed={selecting}
+                    onClick={() => setSelecting(!selecting)}
+                  >
+                    {selecting ? "Done selecting" : "Select pixel"}
+                  </button>
+                  <button
+                    className="secondary"
+                    aria-pressed={mode === "compare"}
+                    onClick={() => setMode("compare")}
+                  >
+                    Before / after
+                  </button>
+                  <button
+                    className="secondary"
+                    aria-pressed={mode === "change"}
+                    onClick={() => setMode("change")}
+                  >
+                    NDVI change
+                  </button>
+                  <span>
+                    {selecting
+                      ? "Click or tap one pixel · zoom in for precision"
+                      : "Drag the divider · click a pixel for values"}
+                  </span>
+                </div>
+                <div className="comparison-map">
                   <div
-                    className="comparison-divider"
-                    style={{ left: `${split}%` }}
+                    ref={baseEl}
+                    className="comparison-canvas"
+                    aria-label="Measured Sundarbans NDVI comparison map"
                   />
-                  <span className="comparison-label before">2001–2005</span>
-                  <span className="comparison-label after">2020–2024</span>
-                </>
-              )}
-              <div
-                className="comparison-pixel-values"
-                role="status"
-                aria-label="Selected pixel values"
-              >
-                <b>{sample ? "Selected pixel · NDVI" : "Inspect a pixel"}</b>
-                {cell && (
-                  <p>
-                    Display pixel · row {cell.row + 1}, column {cell.col + 1}
-                  </p>
-                )}
-                {sample ? (
-                  sample[0] !== null && sample[1] !== null ? (
+                  <div
+                    ref={topEl}
+                    className="comparison-canvas comparison-overlay"
+                    aria-hidden="true"
+                    style={{
+                      clipPath: `inset(0 0 0 ${split}%)`,
+                      visibility: mode === "compare" ? "visible" : "hidden",
+                    }}
+                  />
+                  {mode === "compare" && (
                     <>
-                      <dl>
-                        <div>
-                          <dt>Before · 2001–2005</dt>
-                          <dd>{sample[0].toFixed(4)}</dd>
-                        </div>
-                        <div>
-                          <dt>After · 2020–2024</dt>
-                          <dd>{sample[1].toFixed(4)}</dd>
-                        </div>
-                        <div>
-                          <dt>ΔNDVI · after − before</dt>
-                          <dd>
-                            {sample[2] == null
-                              ? "Unavailable"
-                              : `${sample[2] > 0 ? "+" : ""}${sample[2].toFixed(4)}`}
-                          </dd>
-                        </div>
-                      </dl>
-                      <small>
-                        Complete seasonal years: {sample[3] ?? 0}/5 before ·{" "}
-                        {sample[4] ?? 0}/5 after
-                      </small>
+                      <div
+                        className="comparison-divider"
+                        style={{ left: `${split}%` }}
+                      />
+                      <button
+                        className="comparison-handle"
+                        role="slider"
+                        aria-label="Map comparison divider"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={Math.round(split)}
+                        aria-valuetext={`${Math.round(split)} percent before view`}
+                        style={{
+                          left: `clamp(22px, ${split}%, calc(100% - 22px))`,
+                        }}
+                        onPointerDown={(ev) => {
+                          ev.preventDefault();
+                          dividerDrag.current = true;
+                          ev.currentTarget.setPointerCapture(ev.pointerId);
+                          updateDivider(ev.clientX);
+                        }}
+                        onPointerMove={(ev) => {
+                          if (dividerDrag.current) updateDivider(ev.clientX);
+                        }}
+                        onPointerUp={(ev) => {
+                          dividerDrag.current = false;
+                          ev.currentTarget.releasePointerCapture(ev.pointerId);
+                        }}
+                        onPointerCancel={() => {
+                          dividerDrag.current = false;
+                        }}
+                        onKeyDown={(ev) => {
+                          if (
+                            ![
+                              "ArrowLeft",
+                              "ArrowRight",
+                              "Home",
+                              "End",
+                            ].includes(ev.key)
+                          )
+                            return;
+                          ev.preventDefault();
+                          setSplit((value) =>
+                            ev.key === "Home"
+                              ? 0
+                              : ev.key === "End"
+                                ? 100
+                                : Math.max(
+                                    0,
+                                    Math.min(
+                                      100,
+                                      value +
+                                        (ev.key === "ArrowRight" ? 1 : -1) *
+                                          (ev.shiftKey ? 10 : 1),
+                                    ),
+                                  ),
+                          );
+                        }}
+                      >
+                        <span aria-hidden="true">‹ │ ›</span>
+                      </button>
+                      <span className="comparison-label before">
+                        <small>BEFORE</small>2001–2005
+                      </span>
+                      <span className="comparison-label after">
+                        <small>AFTER</small>2020–2024
+                      </span>
                     </>
-                  ) : (
-                    <p>
-                      No paired measurements at this location. Select a coloured
-                      pixel; blank areas have insufficient data or were excluded
-                      by QA.
-                    </p>
-                  )
-                ) : (
-                  <p>
-                    Click or tap a coloured pixel to see its before, after and
-                    change values here.
-                  </p>
+                  )}
+                </div>
+                {mode === "compare" && (
+                  <label className="comparison-slider">
+                    Before / after divider
+                    <input
+                      aria-label="Before and after map divider"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={split}
+                      onChange={(e) => setSplit(+e.target.value)}
+                    />
+                  </label>
                 )}
+                <div className={`comparison-scale ${mode}`}>
+                  <div />
+                  <span>
+                    {mode === "change"
+                      ? "−0.30 · less green"
+                      : "−0.2 · lower NDVI"}
+                  </span>
+                  <span>{mode === "change" ? "0 · unchanged" : "0.4"}</span>
+                  <span>
+                    {mode === "change"
+                      ? "+0.30 · more green"
+                      : "1.0 · higher NDVI"}
+                  </span>
+                </div>
+                <p>
+                  Transparent pixels: insufficient paired data or excluded
+                  water/QA. Colors saturate at the legend endpoints; downloaded
+                  values retain the full range.
+                </p>
               </div>
-            </div>
-            {mode === "compare" && (
-              <label className="comparison-slider">
-                Before / after divider
-                <input
-                  aria-label="Before and after map divider"
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={split}
-                  onChange={(e) => setSplit(+e.target.value)}
-                />
-              </label>
-            )}
-            <div className={`comparison-scale ${mode}`}>
-              <div />
-              <span>
-                {mode === "change" ? "−0.30 · less green" : "−0.2 · lower NDVI"}
-              </span>
-              <span>{mode === "change" ? "0 · unchanged" : "0.4"}</span>
-              <span>
-                {mode === "change" ? "+0.30 · more green" : "1.0 · higher NDVI"}
-              </span>
-            </div>
-            <p>
-              Transparent pixels: insufficient paired data or excluded water/QA.
-              Colors saturate at the legend endpoints; downloaded values retain
-              the full range.
-            </p>
-            <div className="comparison-summary">
-              <span>
-                <b>{data.summary?.pairedCoveragePercent}%</b> paired pixels /
-                full native raster footprint (includes water and excluded cells)
-              </span>
-              <span>
-                <b>{data.summary?.meanChange.toFixed(4)}</b> mean ΔNDVI on
-                paired native pixels
-              </span>
-            </div>
-            <p aria-live="polite">
-              {sample
-                ? `Selected pixel: before ${sample[0]?.toFixed(4) ?? "no reliable data"}; after ${sample[1]?.toFixed(4) ?? "no reliable data"}; change ${sample[2]?.toFixed(4) ?? "unavailable"}. Complete seasonal years: ${sample[3] ?? 0}/5 before; ${sample[4] ?? 0}/5 after.`
-                : "Select a pixel on the map to inspect its measured values."}
-            </p>
-            <p>{data.method}</p>
-            <div className="source-links">
-              {["before", "after", "change", "beforeYears", "afterYears"].map(
-                (k) => (
-                  <a key={k} href={`/data/sundarbans/${k}.tif`} download>
-                    Download {k} GeoTIFF
-                  </a>
-                ),
-              )}
+              <details
+                className="comparison-analysis"
+                open={analysisOpen}
+                onToggle={(ev) => setAnalysisOpen(ev.currentTarget.open)}
+              >
+                <summary>
+                  Analysis <span>NDVI · MODIS Terra</span>
+                </summary>
+                <div className="comparison-analysis-body">
+                  <p className="comparison-data-kind">
+                    Analyzed NDVI raster · not true-color imagery
+                  </p>
+                  <div
+                    className="comparison-pixel-values"
+                    role="status"
+                    aria-label="Selected pixel values"
+                  >
+                    <b>
+                      {sample ? "Selected pixel · NDVI" : "Inspect a pixel"}
+                    </b>
+                    {cell && (
+                      <p>
+                        Display pixel · row {cell.row + 1}, column{" "}
+                        {cell.col + 1}
+                      </p>
+                    )}
+                    {sample ? (
+                      sample[0] !== null && sample[1] !== null ? (
+                        <>
+                          <dl>
+                            <div>
+                              <dt>Before · 2001–2005</dt>
+                              <dd>{sample[0].toFixed(4)}</dd>
+                            </div>
+                            <div>
+                              <dt>After · 2020–2024</dt>
+                              <dd>{sample[1].toFixed(4)}</dd>
+                            </div>
+                            <div>
+                              <dt>ΔNDVI · after − before</dt>
+                              <dd>
+                                {sample[2] == null
+                                  ? "Unavailable"
+                                  : `${sample[2] > 0 ? "+" : ""}${sample[2].toFixed(4)}`}
+                              </dd>
+                            </div>
+                          </dl>
+                          <small>
+                            Complete seasonal years: {sample[3] ?? 0}/5 before ·{" "}
+                            {sample[4] ?? 0}/5 after
+                          </small>
+                        </>
+                      ) : (
+                        <p>
+                          No paired measurements at this location. Select a
+                          coloured pixel; blank areas have insufficient data or
+                          were excluded by QA.
+                        </p>
+                      )
+                    ) : (
+                      <p>
+                        Click or tap a coloured pixel to see its before, after
+                        and change values here.
+                      </p>
+                    )}
+                  </div>
+                  <div className="comparison-summary">
+                    <span>
+                      <b>{data.summary?.pairedCoveragePercent}%</b> paired
+                      pixels / full native raster footprint (includes water and
+                      excluded cells)
+                    </span>
+                    <span>
+                      <b>{data.summary?.meanChange.toFixed(4)}</b> mean ΔNDVI on
+                      paired native pixels
+                    </span>
+                  </div>
+                  <p aria-live="polite">
+                    {sample
+                      ? `Selected pixel: before ${sample[0]?.toFixed(4) ?? "no reliable data"}; after ${sample[1]?.toFixed(4) ?? "no reliable data"}; change ${sample[2]?.toFixed(4) ?? "unavailable"}. Complete seasonal years: ${sample[3] ?? 0}/5 before; ${sample[4] ?? 0}/5 after.`
+                      : "Select a pixel on the map to inspect its measured values."}
+                  </p>
+                  <details className="comparison-method">
+                    <summary>Processing method</summary>
+                    <p>{data.method}</p>
+                  </details>
+                  <div className="source-links">
+                    {[
+                      "before",
+                      "after",
+                      "change",
+                      "beforeYears",
+                      "afterYears",
+                    ].map((k) => (
+                      <a key={k} href={`/data/sundarbans/${k}.tif`} download>
+                        Download {k} GeoTIFF
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </details>
             </div>
           </>
         )}

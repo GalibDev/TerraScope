@@ -2093,3 +2093,360 @@ footer {
     margin-left: 0;
   }
 }
+/* Sundarbans analysis workspace: scoped to preserve the surrounding atlas. */
+.sundarbans-card {
+  --ink: #e5f1f5;
+  --muted: #a8bec8;
+  --mint: #10b981;
+  --border: #29434f;
+  --workspace-bg: #081521;
+  --workspace-surface: #102d35;
+  --workspace-blue: #38bdf8;
+  background: var(--workspace-bg);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.sundarbans-card .card-heading {
+  padding: 22px 24px 14px;
+  border: 0;
+}
+.sundarbans-card h2 {
+  color: var(--ink);
+  font:
+    600 24px/1.2 Arial,
+    sans-serif;
+  letter-spacing: -0.5px;
+  margin: 8px 0;
+}
+.sundarbans-card .eyebrow {
+  color: var(--workspace-blue);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+}
+.sundarbans-card .card-heading p {
+  color: var(--muted);
+  font-size: 12px;
+}
+.sundarbans-content {
+  padding: 0 20px 22px;
+}
+.sundarbans-content > p {
+  margin: 8px 0 14px;
+}
+.sundarbans-card .comparison-status {
+  background: #f59e0b0c;
+  border: 1px solid #f59e0b40;
+  border-radius: 8px;
+  color: #e4c791;
+  padding: 12px 14px;
+  line-height: 1.6;
+  margin: 0 0 16px;
+}
+.comparison-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 16px;
+  align-items: start;
+}
+.comparison-main {
+  min-width: 0;
+}
+.sundarbans-card .comparison-controls {
+  margin: 0 0 12px;
+  gap: 6px;
+}
+.sundarbans-card .comparison-controls button {
+  background: #102d35;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  border-radius: 7px;
+  min-height: 40px;
+  padding: 8px 10px;
+  font-size: 11px;
+}
+.sundarbans-card .comparison-controls button:hover {
+  border-color: var(--workspace-blue);
+  background: #163b46;
+}
+.sundarbans-card .comparison-controls [aria-pressed="true"] {
+  background: #10b98120;
+  color: #6ee7b7;
+  border-color: #10b98180;
+}
+.sundarbans-card .comparison-controls > span {
+  flex-basis: 100%;
+  margin: 3px 0 0;
+  font-size: 11px;
+}
+.sundarbans-card .comparison-map {
+  height: 510px;
+  background: #10232e;
+  border-color: var(--border);
+  border-radius: 10px;
+}
+.sundarbans-card .comparison-divider {
+  z-index: 2;
+  width: 2px;
+  background: #e5f1f5;
+  box-shadow: 0 0 6px #0008;
+}
+.comparison-handle {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid #d9f4f6;
+  background: #102d35ed;
+  color: #fff;
+  box-shadow: 0 3px 12px #0006;
+  cursor: ew-resize;
+  touch-action: none;
+  padding: 0;
+  font-size: 18px;
+}
+.comparison-handle:hover {
+  background: #17604f;
+}
+.sundarbans-card :is(button, input, summary, a):focus-visible {
+  outline: 2px solid var(--workspace-blue);
+  outline-offset: 3px;
+}
+.sundarbans-card .comparison-label {
+  top: 14px;
+  color: #e5f1f5;
+  background: #081521d9;
+  border: 1px solid #42606b;
+  border-radius: 7px;
+  padding: 8px 10px;
+  backdrop-filter: blur(8px);
+  font-variant-numeric: tabular-nums;
+  z-index: 3;
+}
+.comparison-label small {
+  display: block;
+  font-size: 9px;
+  color: #a8bec8;
+  letter-spacing: 1px;
+  margin-bottom: 3px;
+}
+.sundarbans-card .comparison-label.before {
+  left: 12px;
+}
+.sundarbans-card .comparison-label.after {
+  right: 58px;
+}
+.sundarbans-card .maplibregl-ctrl-group {
+  background: #081521de;
+  border: 1px solid #42606b;
+  border-radius: 9px;
+  box-shadow: 0 3px 12px #0004;
+  backdrop-filter: blur(8px);
+}
+.sundarbans-card .maplibregl-ctrl-group button {
+  width: 36px;
+  height: 36px;
+  border-color: #42606b;
+}
+.sundarbans-card .maplibregl-ctrl-group button:hover {
+  background: #245363;
+}
+.sundarbans-card .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
+.sundarbans-card .comparison-slider {
+  margin: 12px 0;
+  gap: 12px;
+  font-size: 11px;
+}
+.sundarbans-card .comparison-slider input {
+  min-height: 36px;
+  cursor: ew-resize;
+}
+.sundarbans-card .comparison-scale {
+  max-width: none;
+  margin-top: 12px;
+  font-size: 10px;
+}
+.sundarbans-card .comparison-scale > div {
+  height: 7px;
+  border-radius: 5px;
+}
+.comparison-analysis {
+  background: #0d222c;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+.comparison-analysis > summary {
+  padding: 15px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.comparison-analysis > summary span {
+  display: block;
+  color: var(--workspace-blue);
+  font-size: 10px;
+  font-weight: 400;
+  margin-top: 5px;
+}
+.comparison-analysis-body {
+  padding: 0 14px 16px;
+}
+.sundarbans-card .comparison-data-kind {
+  font-size: 10px;
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+.sundarbans-card .comparison-pixel-values {
+  position: static;
+  width: auto;
+  background: var(--workspace-surface);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: none;
+  pointer-events: auto;
+}
+.sundarbans-card .comparison-pixel-values p {
+  font-size: 11px;
+  line-height: 1.6;
+}
+.sundarbans-card .comparison-pixel-values dl > div {
+  gap: 8px;
+  padding: 6px 0;
+  margin: 0;
+}
+.sundarbans-card .comparison-pixel-values dt {
+  font-size: 10px;
+  color: var(--muted);
+}
+.sundarbans-card .comparison-pixel-values dd {
+  color: #6ee7b7;
+  font-size: 14px;
+}
+.sundarbans-card .comparison-pixel-values small {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.sundarbans-card .comparison-summary {
+  gap: 12px;
+  border: 0;
+  padding: 12px 0 0;
+}
+.sundarbans-card .comparison-summary > span {
+  width: 100%;
+  background: #102d3555;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.sundarbans-card .comparison-summary b {
+  font-size: 24px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 4px;
+}
+.comparison-method {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.comparison-method summary {
+  font-size: 12px;
+  cursor: pointer;
+}
+.sundarbans-card .source-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+.sundarbans-card .source-links a,
+.sundarbans-card .comparison-reference {
+  color: var(--workspace-blue);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.sundarbans-card .comparison-pending {
+  background: var(--workspace-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.sundarbans-card .comparison-pending b {
+  font: 600 20px/1.4 sans-serif;
+  color: var(--ink);
+}
+@media (max-width: 1100px) {
+  .comparison-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .comparison-analysis-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .comparison-analysis-body
+    > :is(.comparison-data-kind, .comparison-method, .source-links, p) {
+    grid-column: 1 / -1;
+  }
+  .sundarbans-card .comparison-summary {
+    padding: 0;
+  }
+}
+@media (max-width: 620px) {
+  .sundarbans-card .card-heading {
+    padding: 18px 14px 10px;
+  }
+  .sundarbans-card h2 {
+    font-size: 22px;
+  }
+  .sundarbans-content {
+    padding: 0 12px 16px;
+  }
+  .sundarbans-card .comparison-map {
+    height: 410px;
+  }
+  .sundarbans-card .comparison-label {
+    font-size: 10px;
+    padding: 7px;
+  }
+  .sundarbans-card .comparison-label.after {
+    right: 54px;
+  }
+  .comparison-analysis-body {
+    display: block;
+  }
+  .sundarbans-card .comparison-summary {
+    padding-top: 12px;
+  }
+  .sundarbans-card .comparison-controls button {
+    min-height: 44px;
+  }
+  .sundarbans-card .maplibregl-ctrl-group button {
+    width: 40px;
+    height: 40px;
+  }
+  .sundarbans-card .comparison-slider {
+    flex-direction: row;
+  }
+  .sundarbans-card .comparison-slider input {
+    min-width: 60px;
+  }
+}
