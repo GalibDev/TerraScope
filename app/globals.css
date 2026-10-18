@@ -1960,6 +1960,38 @@ footer {
 .comparison-overlay {
   pointer-events: none;
 }
+.comparison-pixel-values {
+  position: absolute;
+  z-index: 2;
+  bottom: 12px;
+  left: 12px;
+  width: min(300px, calc(100% - 24px));
+  padding: 12px 14px;
+  background: #fdfcf8f5;
+  color: var(--ink);
+  border: 1px solid #c9cebf;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px #00000012;
+  pointer-events: none;
+  font-size: 12px;
+}
+.comparison-pixel-values p {
+  margin: 6px 0 0;
+}
+.comparison-pixel-values dl {
+  margin: 8px 0;
+}
+.comparison-pixel-values dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0;
+}
+.comparison-pixel-values dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
 .comparison-divider {
   position: absolute;
   top: 0;

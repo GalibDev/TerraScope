@@ -304,6 +304,52 @@ export default function SundarbansComparison() {
                   <span className="comparison-label after">2020–2024</span>
                 </>
               )}
+              <div
+                className="comparison-pixel-values"
+                role="status"
+                aria-label="Selected pixel values"
+              >
+                <b>{sample ? "Selected pixel · NDVI" : "Inspect a pixel"}</b>
+                {sample ? (
+                  sample[0] !== null && sample[1] !== null ? (
+                    <>
+                      <dl>
+                        <div>
+                          <dt>Before · 2001–2005</dt>
+                          <dd>{sample[0].toFixed(4)}</dd>
+                        </div>
+                        <div>
+                          <dt>After · 2020–2024</dt>
+                          <dd>{sample[1].toFixed(4)}</dd>
+                        </div>
+                        <div>
+                          <dt>ΔNDVI · after − before</dt>
+                          <dd>
+                            {sample[2] == null
+                              ? "Unavailable"
+                              : `${sample[2] > 0 ? "+" : ""}${sample[2].toFixed(4)}`}
+                          </dd>
+                        </div>
+                      </dl>
+                      <small>
+                        Complete seasonal years: {sample[3] ?? 0}/5 before ·{" "}
+                        {sample[4] ?? 0}/5 after
+                      </small>
+                    </>
+                  ) : (
+                    <p>
+                      No paired measurements at this location. Select a coloured
+                      pixel; blank areas have insufficient data or were excluded
+                      by QA.
+                    </p>
+                  )
+                ) : (
+                  <p>
+                    Click or tap a coloured pixel to see its before, after and
+                    change values here.
+                  </p>
+                )}
+              </div>
             </div>
             {mode === "compare" && (
               <label className="comparison-slider">
