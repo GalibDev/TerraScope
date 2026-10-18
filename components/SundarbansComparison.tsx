@@ -132,10 +132,6 @@ export default function SundarbansComparison() {
           [e, n],
         ],
         fitBoundsOptions: { padding: 20 },
-        maxBounds: [
-          [w, s],
-          [e, n],
-        ],
         renderWorldCopies: false,
         dragRotate: false,
         pitchWithRotate: false,
