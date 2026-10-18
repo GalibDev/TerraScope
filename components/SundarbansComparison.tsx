@@ -49,6 +49,8 @@ export default function SundarbansComparison() {
   const [mode, setMode] = useState<"compare" | "change">("compare"),
     [split, setSplit] = useState(50);
   const [sample, setSample] = useState<(number | null)[] | null>(null);
+  const [selecting, setSelecting] = useState(false);
+  const [cell, setCell] = useState<{ row: number; col: number } | null>(null);
   const baseEl = useRef<HTMLDivElement>(null),
     topEl = useRef<HTMLDivElement>(null);
   const maps = useRef<maplibregl.Map[]>([]);
@@ -93,12 +95,18 @@ export default function SundarbansComparison() {
     try {
       const style = (overlay: boolean): maplibregl.StyleSpecification => ({
         version: 8,
-        sources: Object.fromEntries(
-          Object.entries(data.images!).map(([name, url]) => [
-            name,
-            { type: "image", url, coordinates: data.coordinates! },
-          ]),
-        ),
+        sources: {
+          selection: {
+            type: "geojson",
+            data: { type: "FeatureCollection", features: [] },
+          },
+          ...Object.fromEntries(
+            Object.entries(data.images!).map(([name, url]) => [
+              name,
+              { type: "image", url, coordinates: data.coordinates! },
+            ]),
+          ),
+        },
         layers: [
           {
             id: "background",
@@ -121,6 +129,12 @@ export default function SundarbansComparison() {
               },
             }),
           ),
+          {
+            id: "selected-pixel",
+            type: "line",
+            source: "selection",
+            paint: { "line-color": "#ffdf00", "line-width": 3 },
+          },
         ],
       });
       const [w, s, e, n] = data.study.bbox;
@@ -177,6 +191,39 @@ export default function SundarbansComparison() {
           row = Math.floor(
             ((topBound - y) / (topBound - bottom)) * data.height!,
           );
+        if (col < 0 || row < 0 || col >= data.width! || row >= data.height!) {
+          setCell(null);
+          setSample([null, null, null, null, null]);
+          for (const m of maps.current)
+            (m.getSource("selection") as maplibregl.GeoJSONSource)?.setData({
+              type: "FeatureCollection",
+              features: [],
+            });
+          return;
+        }
+        setCell({ row, col });
+        const dx = (right - left) / data.width!,
+          dy = (topBound - bottom) / data.height!;
+        const toLngLat = (px: number, py: number) => [
+          ((px / 6378137) * 180) / Math.PI,
+          ((2 * Math.atan(Math.exp(py / 6378137)) - Math.PI / 2) * 180) /
+            Math.PI,
+        ];
+        const x0 = left + col * dx,
+          y0 = topBound - row * dy;
+        const ring = [
+          [x0, y0],
+          [x0 + dx, y0],
+          [x0 + dx, y0 - dy],
+          [x0, y0 - dy],
+          [x0, y0],
+        ].map(([px, py]) => toLngLat(px, py));
+        for (const m of maps.current)
+          (m.getSource("selection") as maplibregl.GeoJSONSource)?.setData({
+            type: "Feature",
+            properties: {},
+            geometry: { type: "Polygon", coordinates: [ring] },
+          });
         setSample(
           ["before", "after", "change", "beforeYears", "afterYears"].map(
             (k) => data.grid?.[k]?.[row]?.[col] ?? null,
@@ -202,6 +249,13 @@ export default function SundarbansComparison() {
       );
     }
   }, [data]);
+  useEffect(() => {
+    const base = maps.current[0];
+    if (!base) return;
+    if (selecting) base.dragPan.disable();
+    else base.dragPan.enable();
+    base.getCanvas().style.cursor = selecting ? "crosshair" : "";
+  }, [selecting, data]);
   useEffect(() => {
     const base = maps.current[0];
     if (!base) return;
@@ -270,6 +324,13 @@ export default function SundarbansComparison() {
             <div className="comparison-controls">
               <button
                 className="secondary"
+                aria-pressed={selecting}
+                onClick={() => setSelecting(!selecting)}
+              >
+                {selecting ? "Done selecting" : "Select pixel"}
+              </button>
+              <button
+                className="secondary"
                 aria-pressed={mode === "compare"}
                 onClick={() => setMode("compare")}
               >
@@ -282,7 +343,11 @@ export default function SundarbansComparison() {
               >
                 NDVI change
               </button>
-              <span>Drag the divider · click a pixel for values</span>
+              <span>
+                {selecting
+                  ? "Click or tap one pixel · zoom in for precision"
+                  : "Drag the divider · click a pixel for values"}
+              </span>
             </div>
             <div className="comparison-map">
               <div
@@ -315,6 +380,11 @@ export default function SundarbansComparison() {
                 aria-label="Selected pixel values"
               >
                 <b>{sample ? "Selected pixel · NDVI" : "Inspect a pixel"}</b>
+                {cell && (
+                  <p>
+                    Display pixel · row {cell.row + 1}, column {cell.col + 1}
+                  </p>
+                )}
                 {sample ? (
                   sample[0] !== null && sample[1] !== null ? (
                     <>
