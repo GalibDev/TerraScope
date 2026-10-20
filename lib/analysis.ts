@@ -46,11 +46,13 @@ export function monthly(rows: Observation[]) {
     const k = r.date.slice(0, 7);
     groups.set(k, [...(groups.get(k) || []), r.value]);
   }
-  return [...groups].map(([date, v]) => ({
-    date,
-    value: v.reduce((a, b) => a + b, 0) / v.length,
-    count: v.length,
-  }));
+  return [...groups]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, v]) => ({
+      date,
+      value: v.reduce((a, b) => a + b, 0) / v.length,
+      count: v.length,
+    }));
 }
 export function trend(rows: Observation[]): TrendResult {
   // Equal-weight monthly means prevent a month with more composites receiving more annual weight.

@@ -9,6 +9,18 @@ import {
   rawSchema,
 } from "../lib/analysis";
 import { regions } from "../lib/regions";
+it("orders monthly means chronologically without filling gaps or mutating input", () => {
+  const rows = [
+    { date: "2021-03-01", value: 0.8 },
+    { date: "2020-12-17", value: 0.4 },
+    { date: "2020-12-01", value: 0.6 },
+  ];
+  expect(monthly(rows)).toEqual([
+    { date: "2020-12", value: 0.5, count: 2 },
+    { date: "2021-03", value: 0.8, count: 1 },
+  ]);
+  expect(rows[0].date).toBe("2021-03-01");
+});
 describe("MODIS documented raw formats (synthetic fixtures)", () => {
   it("scales valid values and preserves scaled exports", () => {
     expect(
