@@ -38,6 +38,7 @@ import AnalysisPanels from "@/components/AnalysisPanels";
 import type { MeasuredSeries } from "@/components/AnalysisPanels";
 import { pointFeatures } from "@/lib/map-data";
 import ClimateChart from "@/components/ClimateChart";
+import { downloadBlob } from "@/lib/download";
 const MapView = dynamic(() => import("@/components/Map"), {
   ssr: false,
   loading: () => <div className="map loading">Loading Earth imagery…</div>,
@@ -193,12 +194,10 @@ export default function Home() {
             .join(","),
         )
         .join("\n");
-    const u = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-    const a = document.createElement("a");
-    a.href = u;
-    a.download = `terrascope-${illustrative ? "illustrative" : "measured"}.csv`;
-    a.click();
-    URL.revokeObjectURL(u);
+    downloadBlob(
+      new Blob([csv], { type: "text/csv;charset=utf-8" }),
+      `terrascope-${illustrative ? "illustrative" : "measured"}.csv`,
+    );
   }
   const chartStyle = {
     background: "#FDFCF8",

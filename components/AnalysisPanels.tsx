@@ -14,6 +14,7 @@ import { FlaskConical, Download, ChartNoAxesCombined } from "lucide-react";
 import { anomalies, monthly, trend } from "@/lib/analysis";
 import type { Observation } from "@/lib/analysis";
 import { regions } from "@/lib/regions";
+import { downloadBlob } from "@/lib/download";
 export type MeasuredSeries = {
   region: string;
   index: string;
@@ -109,14 +110,10 @@ export default function AnalysisPanels({
         "NDVI alone does not establish cause",
       ],
     };
-    const u = URL.createObjectURL(
+    downloadBlob(
       new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }),
+      `terrascope-${region}-${demo ? "demo" : "measured"}-report.json`,
     );
-    const a = document.createElement("a");
-    a.href = u;
-    a.download = `terrascope-${region}-${demo ? "demo" : "measured"}-report.json`;
-    a.click();
-    URL.revokeObjectURL(u);
   }
   return (
     <>
