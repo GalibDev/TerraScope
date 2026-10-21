@@ -1,4 +1,5 @@
 "use client";
+import { climateMonths } from "@/lib/climate";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -17,16 +18,7 @@ export default function ClimateChart({
   year: number;
   parameter: Record<string, Record<string, number>>;
 }) {
-  const data = Array.from({ length: 12 }, (_, i) => {
-    const key = `${year}${String(i + 1).padStart(2, "0")}`;
-    const t = parameter.T2M?.[key],
-      p = parameter.PRECTOTCORR?.[key];
-    return {
-      month: new Date(2000, i).toLocaleString("en", { month: "short" }),
-      temperature: t === undefined || t === -999 ? null : t,
-      precipitation: p === undefined || p === -999 ? null : p,
-    };
-  });
+  const data = climateMonths(year, parameter);
   return (
     <div className="chart climate-chart">
       <ResponsiveContainer width="100%" height="100%">
