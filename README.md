@@ -26,6 +26,8 @@ npm start
 
 ## Architecture
 
+CSV observations and JSON reports include the selected region, vegetation index, start/end years and data mode in their filenames so downloads from different analyses are easy to distinguish.
+
 Next.js App Router, React, TypeScript, custom responsive CSS, Recharts, MapLibre, Zod and Vitest. `lib/analysis.ts` separates preparation, aggregation, descriptive trends, seasonality and anomalies. `lib/nasa.ts` contains protected AppEEARS adapters. `app/api/climate` requests POWER for registry locations only; `app/api/scientist` protects the optional LLM key. `app/api/vegetation` reports setup required. No database is necessary for this foundation.
 
 ## Sources and provenance

@@ -196,7 +196,7 @@ export default function Home() {
         .join("\n");
     downloadBlob(
       new Blob([csv], { type: "text/csv;charset=utf-8" }),
-      `terrascope-${illustrative ? "illustrative" : "measured"}.csv`,
+      `terrascope-${region}-${index.toLowerCase()}-${start}-${end}-${illustrative ? "illustrative" : "measured"}.csv`,
     );
   }
   const chartStyle = {

@@ -112,7 +112,7 @@ export default function AnalysisPanels({
     };
     downloadBlob(
       new Blob([JSON.stringify(report, null, 2)], { type: "application/json" }),
-      `terrascope-${region}-${demo ? "demo" : "measured"}-report.json`,
+      `terrascope-${region}-${index.toLowerCase()}-${start}-${end}-${demo ? "demo" : "measured"}-report.json`,
     );
   }
   return (
