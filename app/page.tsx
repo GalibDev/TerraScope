@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import {
   AreaChart,
   Area,
@@ -210,7 +211,13 @@ export default function Home() {
       <header>
         <a className="brand" href="#overview">
           <span className="brand-icon">
-            <Globe2 size={25} />
+            <Image
+              src="/brand/terrascope.svg"
+              alt=""
+              width={58}
+              height={58}
+              priority
+            />
           </span>
           <span>
             Terra<span className="mint">Scope</span>
@@ -219,12 +226,20 @@ export default function Home() {
         </a>
         <nav>
           <a className="active" href="#overview">
+            <LayoutDashboard size={20} />
             Dashboard
           </a>
-          <a href="#map">Explore map</a>
-          <a href="#trends">Trends</a>
+          <a href="#map">
+            <MapIcon size={20} />
+            Explore map
+          </a>
+          <a href="#trends">
+            <ChartNoAxesCombined size={20} />
+            Trends
+          </a>
           <a href="#methodology">
-            About the science <ArrowUpRight size={13} />
+            <FlaskConical size={20} />
+            About the science
           </a>
         </nav>
         <div className="header-right">
@@ -242,7 +257,13 @@ export default function Home() {
         </div>
       </header>
       <aside className={nav ? "open" : ""}>
-        <div className="workspace-label">WORKSPACE</div>
+        <div className="workspace-brand">
+          <Image src="/brand/terrascope.svg" alt="" width={44} height={44} />
+          <div>
+            <b>TerraScope</b>
+            <small>Workspace</small>
+          </div>
+        </div>
         {links.map(([label, Icon, id], i) => (
           <a
             key={id}
@@ -275,15 +296,70 @@ export default function Home() {
         </div>
       </aside>
       <main id="overview">
-        <div className="breadcrumb">
-          Workspace <span>/</span> <b>Vegetation overview</b>
-        </div>
+        <section
+          className="forest-hero"
+          aria-label="Earth observation introduction"
+        >
+          <div className="forest-hero-copy">
+            <div className="hero-kicker">
+              EARTH OBSERVATION FOR BANGLADESH <span />
+            </div>
+            <h2>
+              Bangladesh, <em>in context.</em>
+            </h2>
+            <p>
+              Compare four study locations through a
+              <br className="hero-break" /> consistent scientific method.
+            </p>
+            <div className="hero-capabilities">
+              <div>
+                <Sparkles />
+                <span>
+                  <b>NASA MODIS</b>
+                  <small>MOD13Q1 v6.1</small>
+                </span>
+              </div>
+              <div>
+                <Leaf />
+                <span>
+                  <b>NDVI / EVI</b>
+                  <small>Vegetation indices</small>
+                </span>
+              </div>
+              <div>
+                <Layers />
+                <span>
+                  <b>Quality screening</b>
+                  <small>Coverage & data gaps</small>
+                </span>
+              </div>
+              <div>
+                <Globe2 />
+                <span>
+                  <b>Bangladesh</b>
+                  <small>Study focus</small>
+                </span>
+              </div>
+            </div>
+          </div>
+          <Image
+            className="hero-earth"
+            src="/brand/earth.png"
+            alt="Illustration of Earth with a satellite and leaf"
+            width={440}
+            height={440}
+            priority
+          />
+        </section>
         <div className="page-heading">
           <div>
             <div className="eyebrow">
               <span /> EARTH OBSERVATION ATLAS
             </div>
             <h1>
+              <span className="title-leaf">
+                <Leaf size={30} />
+              </span>
               Vegetation change
               <span className="heading-period">
                 {start}—{end}

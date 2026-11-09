@@ -2450,3 +2450,426 @@ footer {
     min-width: 60px;
   }
 }
+/* Supplied TerraScope visual identity. */
+:root {
+  --bg: #f3f8fa;
+  --panel: #fff;
+  --ink: #102a31;
+  --muted: #526773;
+  --mint: #087749;
+  --border: #dbe6e9;
+}
+body {
+  background: #032d30 url("/brand/forest.webp") center / cover fixed;
+}
+header {
+  background: #041d29f5;
+  color: #fff;
+  border-bottom: 1px solid #4d7e87;
+  gap: 32px;
+  padding: 0 26px;
+  height: 84px;
+}
+.brand {
+  font:
+    700 25px/1.1 Arial,
+    sans-serif;
+  color: #fff;
+  letter-spacing: -0.6px;
+  min-width: 225px;
+}
+.brand-icon {
+  width: 58px;
+  height: 58px;
+  border: 0;
+  flex-shrink: 0;
+}
+.brand-icon img {
+  width: 58px;
+  height: 58px;
+}
+.brand .mint {
+  color: #9aeb49;
+}
+.brand small {
+  color: #e3edf0;
+  letter-spacing: 0.2px;
+  font-size: 10px;
+  margin-top: 5px;
+}
+header nav {
+  gap: 20px;
+  color: #f0f7f9;
+  font-size: 13px;
+}
+header nav a {
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  gap: 9px;
+  white-space: nowrap;
+}
+header nav a.active {
+  background: #0d674c;
+  border: 1px solid #258469;
+  color: #fff;
+}
+header nav a:hover {
+  background: #16454c;
+}
+.header-right .live {
+  display: none;
+}
+.avatar {
+  background: #153a43;
+  color: #b7ecae;
+  border-color: #47626c;
+}
+aside {
+  top: 84px;
+  width: 230px;
+  background:
+    linear-gradient(180deg, #061e29 40%, #023d36df),
+    url("/brand/forest.webp") bottom / auto 60% no-repeat;
+  color: #f1f6f5;
+  border-color: #315a61;
+  padding: 20px 16px;
+}
+.workspace-brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 0 8px 18px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #35545b;
+}
+.workspace-brand b {
+  display: block;
+  font-size: 17px;
+}
+.workspace-brand small {
+  display: block;
+  color: #bed0d4;
+  margin-top: 4px;
+  font-size: 11px;
+}
+aside > a {
+  color: #edf7f5;
+  padding: 14px 12px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+aside > a.selected {
+  background: #126a4b;
+  color: #fff;
+  border: 1px solid #288765;
+}
+aside > a:hover {
+  background: #194d4d;
+  color: #fff;
+}
+.sidebar-note {
+  border-top: 1px solid #426267;
+  margin-top: 24px;
+  padding-top: 24px;
+}
+.sidebar-note strong {
+  color: #c7efaf;
+  font:
+    600 22px/1.3 Arial,
+    sans-serif;
+}
+.sidebar-note p,
+.sidebar-note a,
+.sidebar-bottom {
+  color: #bed0cf;
+}
+main {
+  margin-left: 230px;
+  padding: 18px 24px 40px;
+  background: #f3f8fa;
+  min-height: calc(100vh - 84px);
+}
+.forest-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 280px;
+  border-radius: 16px;
+  background: #032c32 url("/brand/forest.webp") center / cover;
+  border: 1px solid #3d7078;
+  overflow: hidden;
+  padding: 30px;
+  margin-bottom: 24px;
+  color: #f2fbff;
+}
+.forest-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #00222be8 0%, #002a3260 65%, #00151e50);
+  z-index: -1;
+}
+.forest-hero-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 75%;
+}
+.hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+.hero-kicker span {
+  height: 2px;
+  width: 54px;
+  background: #a4ee5c;
+}
+.forest-hero h2 {
+  font:
+    700 clamp(28px, 3.2vw, 49px)/1.1 Arial,
+    sans-serif;
+  letter-spacing: -1.2px;
+  color: #fff;
+  margin: 16px 0 8px;
+}
+.forest-hero h2 em {
+  color: #97ed54;
+  font-style: normal;
+}
+.forest-hero p {
+  color: #d6edf5;
+  font-size: 17px;
+  line-height: 1.45;
+  margin: 0 0 20px;
+}
+.hero-earth {
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34%;
+  height: auto;
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+.hero-capabilities {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hero-capabilities > div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #95b8ae80;
+  border-radius: 12px;
+  background: #123c40b3;
+  backdrop-filter: blur(5px);
+}
+.hero-capabilities svg {
+  width: 23px;
+  height: 23px;
+  color: #a3ef6c;
+}
+.hero-capabilities b {
+  display: block;
+  font-size: 10px;
+}
+.hero-capabilities small {
+  display: block;
+  font-size: 9px;
+  margin-top: 3px;
+  color: #d4e6e8;
+}
+.page-heading {
+  margin: 0 4px 18px;
+  align-items: center;
+}
+.page-heading .eyebrow {
+  display: none;
+}
+.page-heading h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font:
+    700 clamp(23px, 2.3vw, 34px)/1.2 Arial,
+    sans-serif;
+  letter-spacing: -0.8px;
+  margin: 0 0 6px;
+}
+.page-heading .heading-period {
+  display: inline;
+  font: inherit;
+  color: #075d42;
+  margin: 0;
+}
+.title-leaf {
+  display: inline-grid;
+  place-items: center;
+  padding: 12px;
+  background: #d8fbd2;
+  color: #087749;
+  border-radius: 13px;
+}
+.page-heading p {
+  margin: 0;
+  font-size: 12px;
+}
+.filters {
+  background: #fff;
+  border: 1px solid #dce8ed;
+  border-radius: 14px;
+  box-shadow: 0 3px 8px #163d4a0a;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.select,
+.period {
+  border-radius: 8px;
+}
+.card {
+  background: #fff;
+  border: 1px solid #dce7eb;
+  border-radius: 14px;
+  box-shadow: 0 5px 12px #153b4710;
+}
+.card h2 {
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+}
+.spotlight {
+  background: #fff;
+}
+.notice {
+  border-radius: 10px;
+}
+@media (min-width: 1600px) {
+  main {
+    margin-left: 230px;
+  }
+}
+@media (max-width: 1150px) {
+  header {
+    gap: 18px;
+  }
+  header nav {
+    gap: 4px;
+  }
+  header nav a {
+    padding: 0 8px;
+    font-size: 12px;
+  }
+  .hero-capabilities > div {
+    padding: 8px;
+  }
+  .forest-hero-copy {
+    max-width: 80%;
+  }
+}
+@media (max-width: 900px) {
+  aside {
+    width: 200px;
+  }
+  main {
+    margin-left: 200px;
+    padding: 16px;
+  }
+  header nav {
+    display: none;
+  }
+  .hero-earth {
+    width: 40%;
+    right: -30px;
+    opacity: 0.8;
+  }
+  .forest-hero-copy {
+    max-width: 100%;
+  }
+  .forest-hero h2 {
+    font-size: 32px;
+  }
+  .hero-capabilities {
+    max-width: 80%;
+  }
+}
+@media (max-width: 620px) {
+  header {
+    height: 72px;
+    padding: 0 14px;
+  }
+  .brand {
+    min-width: 0;
+    font-size: 22px;
+  }
+  .brand-icon,
+  .brand-icon img {
+    width: 46px;
+    height: 46px;
+  }
+  aside {
+    top: 72px;
+    width: 230px;
+  }
+  main {
+    margin-left: 0;
+    padding: 12px;
+  }
+  .forest-hero {
+    min-height: 335px;
+    padding: 22px 18px;
+    margin-bottom: 18px;
+  }
+  .forest-hero h2 {
+    font-size: 33px;
+    max-width: 260px;
+  }
+  .forest-hero p {
+    font-size: 14px;
+    max-width: 230px;
+  }
+  .hero-earth {
+    width: 180px;
+    top: 128px;
+    right: -38px;
+    opacity: 0.65;
+  }
+  .hero-capabilities {
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 25px;
+  }
+  .hero-capabilities > div {
+    min-width: 0;
+  }
+  .hero-kicker {
+    font-size: 8px;
+    gap: 8px;
+  }
+  .hero-kicker span {
+    width: 25px;
+  }
+  .page-heading h1 {
+    font-size: 24px;
+    gap: 8px;
+  }
+  .title-leaf {
+    padding: 8px;
+  }
+  .page-heading .heading-period {
+    margin-left: 0;
+  }
+  .page-heading {
+    gap: 12px;
+  }
+  .header-right {
+    gap: 12px;
+  }
+}
