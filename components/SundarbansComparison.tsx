@@ -115,6 +115,16 @@ export default function SundarbansComparison() {
       const style = (overlay: boolean): maplibregl.StyleSpecification => ({
         version: 8,
         sources: {
+          context: {
+            type: "raster",
+            tiles: [
+              "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg",
+            ],
+            tileSize: 256,
+            maxzoom: 8,
+            attribution:
+              "NASA GIBS · Blue Marble geographic context (not period imagery)",
+          },
           selection: {
             type: "geojson",
             data: { type: "FeatureCollection", features: [] },
@@ -131,6 +141,12 @@ export default function SundarbansComparison() {
             id: "background",
             type: "background",
             paint: { "background-color": "#10232e" },
+          },
+          {
+            id: "context",
+            type: "raster",
+            source: "context",
+            paint: { "raster-opacity": 0.65, "raster-saturation": -0.25 },
           },
           ...[overlay ? "after" : "before", ...(overlay ? [] : ["change"])].map(
             (name) => ({
@@ -185,6 +201,16 @@ export default function SundarbansComparison() {
       base.addControl(
         new maplibregl.NavigationControl({ showCompass: false }),
         "top-right",
+      );
+      base.addControl(
+        new maplibregl.FullscreenControl({
+          container: baseEl.current.parentElement!,
+        }),
+        "top-right",
+      );
+      base.addControl(
+        new maplibregl.ScaleControl({ unit: "metric" }),
+        "bottom-left",
       );
       base.on("move", () =>
         top.jumpTo({
@@ -386,6 +412,26 @@ export default function SundarbansComparison() {
                   </span>
                 </div>
                 <div className="comparison-map">
+                  <div className={`comparison-scale ${mode}`}>
+                    <div />
+                    <span>
+                      {mode === "change"
+                        ? "−0.30 · less green"
+                        : "−0.2 · lower NDVI"}
+                    </span>
+                    <span>{mode === "change" ? "0 · unchanged" : "0.4"}</span>
+                    <span>
+                      {mode === "change"
+                        ? "+0.30 · more green"
+                        : "1.0 · higher NDVI"}
+                    </span>
+                  </div>
+                  <div className="comparison-context-note">
+                    Background: NASA Blue Marble context · same on both sides
+                    <br />
+                    Coloured overlay: measured seasonal NDVI · blank overlay =
+                    no paired data
+                  </div>
                   <div
                     ref={baseEl}
                     className="comparison-canvas"
@@ -485,20 +531,7 @@ export default function SundarbansComparison() {
                     />
                   </label>
                 )}
-                <div className={`comparison-scale ${mode}`}>
-                  <div />
-                  <span>
-                    {mode === "change"
-                      ? "−0.30 · less green"
-                      : "−0.2 · lower NDVI"}
-                  </span>
-                  <span>{mode === "change" ? "0 · unchanged" : "0.4"}</span>
-                  <span>
-                    {mode === "change"
-                      ? "+0.30 · more green"
-                      : "1.0 · higher NDVI"}
-                  </span>
-                </div>
+
                 <p>
                   Transparent pixels: insufficient paired data or excluded
                   water/QA. Colors saturate at the legend endpoints; downloaded

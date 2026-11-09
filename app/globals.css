@@ -3771,3 +3771,47 @@ aside {
     flex-basis: 40%;
   }
 }
+.sundarbans-card .comparison-map {
+  background: #062c30;
+}
+.comparison-context-note {
+  position: absolute;
+  z-index: 4;
+  bottom: 38px;
+  left: 12px;
+  right: 12px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  padding: 8px 10px;
+  border: 1px solid #5f9e8b;
+  border-radius: 8px;
+  background: #032b2df0;
+  color: #d6f1e7;
+  font-size: 10px;
+  line-height: 1.6;
+  pointer-events: none;
+}
+.sundarbans-card .maplibregl-ctrl-scale {
+  color: #fff;
+  background: #032b2de8;
+  border-color: #fff;
+  padding: 3px 8px;
+}
+.sundarbans-card .comparison-map:fullscreen {
+  height: 100vh;
+  width: 100vw;
+  border-radius: 0;
+}
+.sundarbans-card .comparison-scale {
+  background: #073c36;
+  border: 1px solid #4f9c83;
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+@media (max-width: 620px) {
+  .comparison-context-note {
+    font-size: 9px;
+    bottom: 40px;
+  }
+}
+.sundarbans-card .comparison-map .comparison-scale { position:absolute; z-index:4; bottom:104px; left:50%; transform:translateX(-50%); width:min(340px,calc(100% - 24px)); margin:0; pointer-events:none; background:#032b2ded; }
