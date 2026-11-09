@@ -2607,7 +2607,12 @@ main {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #00222bad 0%, #002a3220 60%, transparent 75%);
+  background: linear-gradient(
+    90deg,
+    #00222bad 0%,
+    #002a3220 60%,
+    transparent 75%
+  );
   z-index: -1;
 }
 .forest-hero-copy {
@@ -2873,3 +2878,259 @@ main {
     gap: 12px;
   }
 }
+/* Satellite map workspace and supplied sidebar artwork. */
+aside {
+  background:
+    linear-gradient(#031c2980, #002a2d38),
+    url("/brand/sidebar.png") center / cover no-repeat;
+}
+.map-card,
+.study-card {
+  --ink: #edf7f8;
+  --muted: #b8cfd3;
+  --border: #3b656b;
+  --mint: #b4ef54;
+  color: var(--ink);
+  background: #062e35;
+  border: 1px solid #527b80;
+  box-shadow: 0 6px 18px #00262d18;
+}
+.map-card .card-heading {
+  padding: 20px;
+  gap: 16px;
+  border-bottom: 1px solid #365a62;
+  background: linear-gradient(90deg, #0a3641, #123f43);
+  flex-wrap: wrap;
+}
+.map-card h2 {
+  color: #f2fafb;
+  font-size: 23px;
+  line-height: 1.3;
+}
+.map-card h2 svg {
+  color: #b6f153;
+  width: 25px;
+  height: 25px;
+}
+.map-card .card-heading p {
+  color: #bfd4d8;
+  font-size: 12px;
+}
+.map-card .small-date {
+  background: #173e46;
+  border: 1px solid #52777d;
+  border-radius: 9px;
+  padding: 8px 12px;
+  color: #d0e4e7;
+  font-size: 11px;
+}
+.map-card input[type="date"] {
+  color-scheme: dark;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  margin-top: 4px;
+  font-weight: 600;
+}
+.map-card .map-wrap {
+  height: 510px;
+  margin: 14px;
+  border: 1px solid #709494;
+  border-radius: 12px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.map-card .map-top {
+  top: 14px;
+  left: 14px;
+  right: 58px;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.map-card .map-tag {
+  background: #062e38e8;
+  color: #f0f9f9;
+  border: 1px solid #709797;
+  border-radius: 9px;
+  padding: 9px 11px;
+  font-size: 10px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px #0003;
+}
+.map-card button.map-tag[aria-pressed="true"] {
+  border-color: #abdf58;
+  background: #126446e8;
+}
+.map-card button.map-tag:hover {
+  background: #225760;
+}
+.map-card .map-tag i {
+  background: #b5ef55;
+}
+.map-card .maplibregl-ctrl-group {
+  background: #07323ce8;
+  border: 1px solid #60868b;
+  border-radius: 9px;
+  overflow: hidden;
+}
+.map-card .maplibregl-ctrl-group button {
+  width: 36px;
+  height: 36px;
+  border-color: #42666b;
+}
+.map-card .maplibregl-ctrl-group button:hover {
+  background: #28606a;
+}
+.map-card .maplibregl-ctrl-icon {
+  filter: invert(1);
+}
+.map-card .maplibregl-ctrl-scale {
+  background: #052b35e8;
+  color: #fff;
+  border-color: #c5dedd;
+  padding: 3px 6px;
+  font-size: 10px;
+}
+.map-card .analytical-legend {
+  background: #062f39eb;
+  border: 1px solid #6a9495;
+  border-radius: 10px;
+  color: #f3fbf9;
+  bottom: 50px;
+  left: 14px;
+  padding: 12px;
+  backdrop-filter: blur(8px);
+  max-width: 260px;
+}
+.map-card .analytical-legend small {
+  color: #c2d9db;
+}
+.map-card .map-bottom {
+  color: #e0eff0;
+  background: #052b35dc;
+  padding: 7px;
+  border-radius: 6px;
+  font-size: 9px;
+}
+.map-card .map-legend {
+  color: #c6dadd;
+  padding: 0 16px 16px;
+  border: 0;
+  font-size: 10px;
+  gap: 12px;
+}
+.map-card .map-error {
+  background: #382c16ed;
+  color: #ffe1a2;
+  border-radius: 8px;
+}
+.study-card {
+  padding: 20px;
+}
+.study-card .eyebrow {
+  color: #b8ef58;
+  letter-spacing: 2px;
+  font-size: 11px;
+  margin-bottom: 16px;
+}
+.study-visual {
+  height: 105px;
+  background: url("/brand/forest.webp") center 35% / cover;
+  border-radius: 10px;
+  border: 1px solid #426c70;
+  margin-bottom: 14px;
+}
+.study-card .study-symbol {
+  display: none;
+}
+.study-card h2 {
+  font:
+    700 28px/1.2 Arial,
+    sans-serif;
+  color: #f0faf8;
+  margin: 12px 0 8px;
+}
+.study-card > p {
+  color: #bed3d6;
+  font-size: 11px;
+}
+.study-card .coordinate {
+  color: #d7ebed;
+  font-size: 12px;
+  margin: 16px 0;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #42636a;
+}
+.study-card dl {
+  margin: 0;
+}
+.study-card dl > div {
+  border-bottom: 1px solid #365a62;
+  padding: 12px 0;
+}
+.study-card dt {
+  color: #bfd2d5;
+  font-size: 11px;
+}
+.study-card dd {
+  color: #f1fafa;
+  font-size: 11px;
+}
+.study-card dd.amber {
+  background: #f1c3321a;
+  color: #f2dc69;
+  border: 1px solid #a89536;
+  padding: 4px 7px;
+  border-radius: 6px;
+}
+.study-card .study-callout {
+  border: 1px solid #6faba7;
+  background: #16484d;
+  color: #def0ee;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.6;
+  margin-top: 18px;
+}
+.study-card .study-callout svg {
+  color: #b3ef59;
+  flex-shrink: 0;
+}
+@media (max-width: 900px) {
+  .map-card .map-wrap {
+    height: 460px;
+  }
+}
+@media (max-width: 620px) {
+  .map-card .card-heading {
+    padding: 15px;
+  }
+  .map-card h2 {
+    font-size: 20px;
+  }
+  .map-card .small-date {
+    width: 100%;
+  }
+  .map-card .map-wrap {
+    margin: 10px;
+    height: 430px;
+  }
+  .map-card .map-top {
+    top: 10px;
+    left: 10px;
+    gap: 5px;
+  }
+  .map-card .map-tag {
+    font-size: 9px;
+    padding: 8px;
+  }
+  .map-card .analytical-legend {
+    max-width: 210px;
+    font-size: 10px;
+  }
+  .study-card {
+    padding: 18px;
+  }
+}
+.map-card .card-heading h2 { font:700 23px/1.3 Arial,sans-serif; }

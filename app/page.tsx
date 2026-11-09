@@ -498,6 +498,11 @@ export default function Home() {
           </section>
           <section className="card study-card">
             <div className="eyebrow">REGION SPOTLIGHT</div>
+            <div
+              className="study-visual"
+              role="img"
+              aria-label="Decorative forest illustration"
+            />
             <div className="study-symbol">
               <Leaf size={34} />
             </div>

@@ -122,6 +122,11 @@ export default function Map({
     }
     map.current = m;
     m.addControl(new maplibregl.NavigationControl(), "top-right");
+    m.addControl(new maplibregl.FullscreenControl(), "top-right");
+    m.addControl(
+      new maplibregl.ScaleControl({ unit: "metric" }),
+      "bottom-right",
+    );
     m.on("error", () =>
       setError(
         "Imagery could not load. Check connection or choose another date.",
@@ -180,6 +185,7 @@ export default function Map({
         </span>
         <button
           className="map-tag"
+          aria-pressed={analytical}
           disabled={!points.features.length}
           onClick={() => setAnalytical(!analytical)}
         >
@@ -189,6 +195,7 @@ export default function Map({
         </button>
         <button
           className="map-tag"
+          aria-pressed={satellite}
           onClick={() => {
             const m = map.current;
             if (m?.getLayer("imagery"))
