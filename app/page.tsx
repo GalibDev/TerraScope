@@ -48,10 +48,15 @@ const SundarbansComparison = dynamic(
   () => import("@/components/SundarbansComparison"),
   { ssr: false },
 );
+const SentinelComparison = dynamic(
+  () => import("@/components/SentinelComparison"),
+  { ssr: false },
+);
 const links = [
   ["Overview", LayoutDashboard, "overview"],
   ["Interactive map", MapIcon, "map"],
   ["Sundarbans comparison", Layers, "sundarbans"],
+  ["Sentinel-2 detailed view", MapIcon, "sentinel2"],
   ["Trend detective", ChartNoAxesCombined, "trends"],
   ["Region comparison", Layers, "regions"],
   ["Explain results", FlaskConical, "scientist"],
@@ -682,6 +687,7 @@ export default function Home() {
             </article>
           </section>
           <SundarbansComparison />
+          <SentinelComparison />
           <section className="card trend-card" id="trends">
             <div className="card-heading">
               <div>
