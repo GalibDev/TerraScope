@@ -1091,45 +1091,249 @@ export default function Home() {
             )}
           </section>
         </div>
-        <section className="methodology" id="methodology">
-          <div>
-            <div className="eyebrow">BUILT ON TRANSPARENT SCIENCE</div>
-            <h2>The method behind the map.</h2>
+        <section className="methodology science-workspace" id="methodology">
+          <div className="science-hero">
+            <div className="eyebrow">METHODOLOGY</div>
+            <h2>
+              The method behind <span>TerraScope</span>
+            </h2>
             <p>
-              Vegetation indices tell part of Earth’s story. Good science makes
-              its limits visible.
+              A transparent and reproducible approach to explore vegetation
+              change using NASA Earth observation data.
             </p>
+            <div className="science-badges">
+              <span>
+                <Globe2 /> NASA MODIS
+              </span>
+              <span>
+                <Leaf /> NDVI & EVI
+              </span>
+              <span>
+                <Check /> Quality screened
+              </span>
+              <span>
+                <Layers /> Transparent methods
+              </span>
+            </div>
           </div>
-          <div className="method-grid">
-            <article>
-              <b>01 / Quality before quantity</b>
-              <p>
-                MOD13Q1.061 raw values use a 0.0001 scale factor; −3000 is fill.
-                Strict DetailedQA excludes poor usefulness, clouds, high
-                aerosol, snow and shadow. Valid range: −0.2 to 1.
+          <section className="science-workflow science-card">
+            <h3>
+              <Layers /> Our analysis workflow
+            </h3>
+            <p>From satellite observations to understandable results.</p>
+            <ol>
+              {[
+                ["Acquire data", "NASA MODIS via AppEEARS", Database],
+                [
+                  "Screen observations",
+                  "Check quality flags and missing data",
+                  Check,
+                ],
+                ["Read indices", "Use product NDVI / EVI values", Leaf],
+                [
+                  "Compare & analyze",
+                  "Match months and check coverage",
+                  ChartNoAxesCombined,
+                ],
+                [
+                  "Visualize & explore",
+                  "Maps, trends and pixel inspection",
+                  MapIcon,
+                ],
+              ].map(([title, text, Icon], i) => {
+                const StepIcon = Icon as typeof Database;
+                return (
+                  <li key={title as string}>
+                    <span className="science-step-icon">
+                      <StepIcon />
+                    </span>
+                    <div>
+                      <b>
+                        {i + 1}. {title as string}
+                      </b>
+                      <small>{text as string}</small>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+          <div className="science-columns">
+            <article className="science-card">
+              <h3>
+                <Database /> Dataset at a glance
+              </h3>
+              <p>The core vegetation product used in TerraScope.</p>
+              <dl>
+                {[
+                  ["NASA product", "MOD13Q1 v6.1"],
+                  ["What it provides", "NDVI and EVI"],
+                  ["Spatial resolution", "Nominal 250 meters"],
+                  ["Source cadence", "16-day composite"],
+                  ["Accessed via", "AppEEARS / Earthdata"],
+                  ["Pilot area", "Small window near Sundarbans East"],
+                  ["Pilot periods", "2001–2005 vs 2020–2024"],
+                  ["Matching months", "Jan, Feb, Nov, Dec"],
+                ].map(([label, value]) => (
+                  <div key={label}>
+                    <dt>{label}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </article>
+            <article className="science-card">
+              <h3>
+                <Leaf /> Vegetation indices
+              </h3>
+              <p>Indicators of vegetation greenness, not tree counts.</p>
+              <div className="science-index">
+                <Leaf />
+                <div>
+                  <h4>NDVI</h4>
+                  <p>Normalized Difference Vegetation Index</p>
+                  <code>(NIR − Red) / (NIR + Red)</code>
+                </div>
+              </div>
+              <div className="science-index">
+                <Layers />
+                <div>
+                  <h4>EVI</h4>
+                  <p>Enhanced Vegetation Index</p>
+                  <code>
+                    2.5 × (NIR − Red) /<br />
+                    (NIR + 6 × Red − 7.5 × Blue + 1)
+                  </code>
+                </div>
+              </div>
+              <p className="science-footnote">
+                NIR means near-infrared reflectance. TerraScope reads NASA’s
+                supplied index layers; these formulas explain the indices,
+                rather than a new calculation performed in the browser.
               </p>
             </article>
-            <article>
-              <b>02 / Trends need context</b>
+            <article className="science-card">
+              <h3>
+                <Check /> Data quality & screening
+              </h3>
+              <p>Make observation quality visible.</p>
+              <ul className="science-checks">
+                <li>Use the product’s DetailedQA flags</li>
+                <li>Exclude unsuitable clouds, snow and shadow</li>
+                <li>Display missing observations without filling gaps</li>
+                <li>Report paired coverage and seasonal years</li>
+                <li>Disclose screening assumptions</li>
+              </ul>
               <p>
-                Monthly means use valid observations without interpolation.
-                Descriptive OLS uses complete 12-month years, requiring at least
-                five. Exploratory approximate 95% Newey–West intervals require
-                20 consecutive complete years and nondegenerate residuals.
-                Direction is supported only when the interval excludes zero;
-                assumptions and multiple-comparison limits remain visible.
-              </p>
-            </article>
-            <article>
-              <b>03 / Avoid overinterpretation</b>
-              <p>
-                NDVI alone cannot prove deforestation, recovery or causation.
-                Anomalies use calendar-month baseline z-scores (2001–2010, at
-                least five values); |z| ≥ 2 flags an unusual observation, not a
-                disaster.
+                <b>Two distinct policies</b>
+                <br />
+                Study points use strict QA. The Sundarbans raster uses an
+                explicitly exploratory policy that allows intermediate aerosol
+                after other checks; strict QA retains zero paired pixels.
               </p>
             </article>
           </div>
+          <div className="science-bottom">
+            <article className="science-card science-limits">
+              <h3>
+                <FlaskConical /> Key assumptions & limitations
+              </h3>
+              <ul>
+                <li>
+                  The pilot does not establish tree counts or forest-area change
+                  across the whole Sundarbans.
+                </li>
+                <li>
+                  The study window is an analyst-defined rectangle, not an
+                  official sanctuary boundary.
+                </li>
+                <li>
+                  Only 7.5% of the native raster footprint has paired data; this
+                  denominator includes water and excluded cells.
+                </li>
+                <li>
+                  Matching months reduce seasonal mismatch, but tides, mixed
+                  pixels and QA choices still matter.
+                </li>
+              </ul>
+            </article>
+            <article className="science-card">
+              <h3>
+                <Layers /> Reproducibility & sources
+              </h3>
+              <p>Explore the data, methods and code.</p>
+              <div className="science-resources">
+                {[
+                  [
+                    "MOD13Q1 v6.1",
+                    "Product information",
+                    "https://modis.gsfc.nasa.gov/data/dataprod/mod13.php",
+                    Globe2,
+                  ],
+                  [
+                    "AppEEARS",
+                    "Data access",
+                    "https://appeears.earthdatacloud.nasa.gov/",
+                    Database,
+                  ],
+                  [
+                    "Source code",
+                    "GitHub",
+                    "https://github.com/GalibDev/TerraScope",
+                    BookOpen,
+                  ],
+                  [
+                    "Earthdata",
+                    "Search",
+                    "https://search.earthdata.nasa.gov/search?q=MOD13Q1",
+                    MapIcon,
+                  ],
+                ].map(([label, description, url, Icon]) => {
+                  const LinkIcon = Icon as typeof Globe2;
+                  return (
+                    <a
+                      key={label as string}
+                      href={url as string}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <LinkIcon />
+                      <b>{label as string}</b>
+                      <small>{description as string} ↗</small>
+                    </a>
+                  );
+                })}
+              </div>
+            </article>
+          </div>
+          <details className="science-card science-technical">
+            <summary>Technical processing details</summary>
+            <p>
+              Raw raster indices use scale 0.0001 and fill −3000; AppEEARS point
+              exports are already scaled. NDVI/EVI valid range is −0.2 to 1. No
+              second scaling is applied to point exports.
+            </p>
+            <p>
+              Point trends use equal-weight monthly means and complete 12-month
+              years: at least five for descriptive OLS, and 20 consecutive
+              complete years with nondegenerate residuals for exploratory
+              approximate 95% Newey–West intervals. Direction requires an
+              interval excluding zero; assumptions and multiple-comparison
+              limits remain visible.
+            </p>
+            <p>
+              Sundarbans seasonal means give equal weight to the four matching
+              months, require all four per year and at least three complete
+              seasonal years per period. Only paired pixels contribute. Display
+              reprojection uses nearest neighbour; downloadable scientific grids
+              retain the native projection.
+            </p>
+            <p>
+              Anomalies use calendar-month baseline z-scores for 2001–2010, with
+              at least five baseline values and nonzero variance. |z| ≥ 2 flags
+              an unusual observation, not a disaster or its cause.
+            </p>
+          </details>
         </section>
         <section className="sources" id="sources">
           <div>
