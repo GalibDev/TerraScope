@@ -11,3 +11,20 @@
 - Assam, Chiang Mai and Riyadh extraction tasks were still processing when this dataset was imported.
 
 Earlier setup-only/private-operation statements in VERIFICATION.md describe pre-account checks. This record supersedes them for this Bangladesh point; regional raster and area-weighted results remain unimplemented.
+
+## Additional measured study points imported 2026-11-09
+
+Completed AppEEARS tasks for Assam, Chiang Mai and Riyadh were downloaded using the existing checksum-verifying CLI. Provider README section 3 confirms scaled point values; registry coordinates were validated during import. NDVI and EVI retain original dates and bit-packed VI Quality, with unchanged strict server QA. Existing Bangladesh observations and per-series provenance are preserved.
+
+| Study point | Task ID | Source records per index | Valid records in 2001–2024 | Observed months in 2001–2024 |
+| --- | --- | --- | --- | --- |
+| Assam | 0e114512-d1cd-41ac-9945-fb9d4fc8372d | 553 | 161 | 131/288 |
+| Chiang Mai | c99eeb3c-d73b-4bfd-927a-466faa880fee | 553 | 106 | 79/288 |
+| Riyadh | 359e09fa-ee95-4e04-8f64-36df5457c4c3 | 553 | 534 | 286/288 |
+
+Source CSV SHA-256:
+- Assam: e3aa354b62c3765cb3729a7e73ef974ff3f8619d3e351d9ae7172fc0f98c055a
+- Chiang Mai: 7e71b99e50c19476242301c26d7a0f763a377cec60079db551fa6ebca20b9f2d
+- Riyadh: 49c91bfcd8830dbf149486c24393ee0ce46f35fee6fe9eb0619de4efc562c4a2
+
+The full source includes an overlapping 2000-12-18 composite, excluded by the dashboard's 2001–2024 period filter. Both indices have the same retained record counts. Assam and Chiang Mai have no complete calendar years under strict QA. Riyadh has 22 complete calendar years, but the engine still classifies the selected series as insufficient for its uncertainty requirements; record availability must not be presented as a supported directional trend. All locations are representative study points, not regional averages. This section supersedes the earlier processing status for these three tasks.
