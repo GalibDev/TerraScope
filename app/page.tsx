@@ -342,14 +342,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <Image
-            className="hero-earth"
-            src="/brand/earth.png"
-            alt="Illustration of Earth with a satellite and leaf"
-            width={440}
-            height={440}
-            priority
-          />
         </section>
         <div className="page-heading">
           <div>

@@ -2596,7 +2596,7 @@ main {
   isolation: isolate;
   min-height: 280px;
   border-radius: 16px;
-  background: #032c32 url("/brand/forest.webp") center / cover;
+  background: #032c32 url("/brand/hero-combined.png") center / cover;
   border: 1px solid #3d7078;
   overflow: hidden;
   padding: 30px;
@@ -2607,7 +2607,7 @@ main {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #00222be8 0%, #002a3260 65%, #00151e50);
+  background: linear-gradient(90deg, #00222bad 0%, #002a3220 60%, transparent 75%);
   z-index: -1;
 }
 .forest-hero-copy {
