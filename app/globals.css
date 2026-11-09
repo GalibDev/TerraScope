@@ -3133,4 +3133,16 @@ aside {
     padding: 18px;
   }
 }
-.map-card .card-heading h2 { font:700 23px/1.3 Arial,sans-serif; }
+.map-card .card-heading h2 {
+  font:
+    700 23px/1.3 Arial,
+    sans-serif;
+}
+.map-card .imagery-source {
+  max-width: 100%;
+  color-scheme: dark;
+}
+.map-card .imagery-source option {
+  background: #07323c;
+  color: #fff;
+}

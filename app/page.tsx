@@ -59,6 +59,18 @@ const links = [
   ["Data sources", Database, "sources"],
 ] as const;
 export default function Home() {
+  const [activeSection, setActiveSection] = useState("overview");
+  useEffect(() => {
+    const syncSection = () => {
+      const id = window.location.hash.slice(1);
+      setActiveSection(
+        links.some(([, , section]) => section === id) ? id : "overview",
+      );
+    };
+    syncSection();
+    window.addEventListener("hashchange", syncSection);
+    return () => window.removeEventListener("hashchange", syncSection);
+  }, []);
   const [region, setRegion] = useState("bangladesh"),
     [index, setIndex] = useState("NDVI"),
     [start, setStart] = useState(2001),
@@ -225,19 +237,37 @@ export default function Home() {
           </span>
         </a>
         <nav>
-          <a className="active" href="#overview">
+          <a
+            className={activeSection === "overview" ? "active" : ""}
+            aria-current={activeSection === "overview" ? "location" : undefined}
+            href="#overview"
+          >
             <LayoutDashboard size={20} />
             Dashboard
           </a>
-          <a href="#map">
+          <a
+            className={activeSection === "map" ? "active" : ""}
+            aria-current={activeSection === "map" ? "location" : undefined}
+            href="#map"
+          >
             <MapIcon size={20} />
             Explore map
           </a>
-          <a href="#trends">
+          <a
+            className={activeSection === "trends" ? "active" : ""}
+            aria-current={activeSection === "trends" ? "location" : undefined}
+            href="#trends"
+          >
             <ChartNoAxesCombined size={20} />
             Trends
           </a>
-          <a href="#methodology">
+          <a
+            className={activeSection === "methodology" ? "active" : ""}
+            aria-current={
+              activeSection === "methodology" ? "location" : undefined
+            }
+            href="#methodology"
+          >
             <FlaskConical size={20} />
             About the science
           </a>
@@ -264,10 +294,11 @@ export default function Home() {
             <small>Workspace</small>
           </div>
         </div>
-        {links.map(([label, Icon, id], i) => (
+        {links.map(([label, Icon, id]) => (
           <a
             key={id}
-            className={i === 0 ? "selected" : ""}
+            className={activeSection === id ? "selected" : ""}
+            aria-current={activeSection === id ? "location" : undefined}
             href={`#${id}`}
             onClick={() => setNav(false)}
           >

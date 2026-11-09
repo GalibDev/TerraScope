@@ -21,6 +21,9 @@ export default function Map({
   const [error, setError] = useState("");
   const [satellite, setSatellite] = useState(true);
   const [analytical, setAnalytical] = useState(true);
+  const [imageryMode, setImageryMode] = useState<"composite" | "daily">(
+    "composite",
+  );
   const imageryVisibility = useRef(true);
   useEffect(() => {
     if (!el.current) return;
@@ -37,11 +40,16 @@ export default function Map({
             imagery: {
               type: "raster",
               tiles: [
-                `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${date}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`,
+                imageryMode === "daily"
+                  ? `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${date}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`
+                  : "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg",
               ],
               tileSize: 256,
-              maxzoom: 9,
-              attribution: "NASA GIBS · MODIS Terra",
+              maxzoom: imageryMode === "daily" ? 9 : 8,
+              attribution:
+                imageryMode === "daily"
+                  ? "NASA GIBS · MODIS Terra daily"
+                  : "NASA GIBS · Blue Marble composite",
             },
             boundary: {
               type: "geojson",
@@ -146,7 +154,7 @@ export default function Map({
       m.remove();
       map.current = null;
     };
-  }, [date, onSelect]);
+  }, [date, onSelect, imageryMode]);
   useEffect(() => {
     const m = map.current;
     if (!m) return;
@@ -166,7 +174,7 @@ export default function Map({
     return () => {
       m.off("load", update);
     };
-  }, [points, analytical, date]);
+  }, [points, analytical, date, imageryMode]);
   useEffect(() => {
     const r = regions.find((r) => r.id === region);
     if (r)
@@ -175,14 +183,24 @@ export default function Map({
         zoom: region === "bangladesh" ? 5.5 : 5,
         duration: 1200,
       });
-  }, [region, date]);
+  }, [region, date, imageryMode]);
   return (
     <div className="map-wrap">
       <div ref={el} className="map" />
       <div className="map-top">
-        <span className="map-tag">
-          <i /> NASA MODIS · TRUE COLOR
-        </span>
+        <select
+          className="map-tag imagery-source"
+          aria-label="Imagery source"
+          value={imageryMode}
+          onChange={(ev) =>
+            setImageryMode(ev.target.value as "composite" | "daily")
+          }
+        >
+          <option value="composite">
+            NASA Blue Marble · continuous composite
+          </option>
+          <option value="daily">NASA MODIS · daily true color</option>
+        </select>
         <button
           className="map-tag"
           aria-pressed={analytical}
@@ -213,7 +231,11 @@ export default function Map({
       </div>
       <div className="map-bottom">
         <span>◎ Study points · gbOpen Bangladesh outline (2015)</span>
-        <span>Imagery {date}</span>
+        <span>
+          {imageryMode === "daily"
+            ? `Daily imagery ${date} · black swaths are missing coverage`
+            : "Blue Marble composite · not date-specific imagery"}
+        </span>
       </div>
       {points.features.length > 0 && analytical && (
         <div className="analytical-legend">
