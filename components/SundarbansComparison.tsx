@@ -2,6 +2,16 @@
 import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
 import { z } from "zod";
+import {
+  Trees,
+  Download,
+  Scan,
+  ShieldCheck,
+  Layers,
+  MousePointer2,
+  Columns2,
+  ChartNoAxesCombined,
+} from "lucide-react";
 
 const schema = z.object({
   status: z.enum(["processing", "available"]),
@@ -286,12 +296,27 @@ export default function SundarbansComparison() {
   }, [mode, data]);
   return (
     <section className="card sundarbans-card" id="sundarbans">
-      <div className="card-heading">
+      <div className="card-heading comparison-banner">
+        <div className="comparison-brand-icon">
+          <Trees size={34} />
+        </div>
         <div>
           <div className="eyebrow">SPATIAL COMPARISON · MOD13Q1.061</div>
-          <h2>Sundarbans comparison</h2>
+          <h2>
+            Sundarbans <span>comparison</span>
+          </h2>
           <p>2001–2005 versus 2020–2024 · Jan / Feb / Nov / Dec · NDVI</p>
         </div>
+        <span className="comparison-exploratory">Exploratory comparison</span>
+        {data?.status === "available" && (
+          <a
+            className="comparison-export"
+            href="/data/sundarbans/change.tif"
+            download
+          >
+            <Download size={17} /> Export change GeoTIFF
+          </a>
+        )}
       </div>
       <div className="sundarbans-content">
         <p>
@@ -323,35 +348,6 @@ export default function SundarbansComparison() {
           </div>
         ) : (
           <>
-            <div className="simple-result">
-              <span className="eyebrow">
-                RESULT AT A GLANCE · এক নজরে ফলাফল
-              </span>
-              <h3>পুরো সুন্দরবন সম্পর্কে এখনও নিশ্চিত সিদ্ধান্ত নেই</h3>
-              <p>
-                তুলনা করা অংশে গড় NDVI পরিবর্তন{" "}
-                {data.summary!.meanChange > 0 ? "+" : ""}
-                {data.summary!.meanChange.toFixed(4)}। এটি গাছের সংখ্যা বা
-                বনভূমির শতকরা পরিবর্তন নয়।
-              </p>
-              <p>
-                <b>কতটা নিশ্চিত?</b> ফলটি প্রাথমিক। Raster এলাকার মাত্র{" "}
-                {data.summary!.pairedCoveragePercent}% অংশে দুই সময়ের তুলনাযোগ্য
-                data আছে; এতে পানি ও বাদ দেওয়া জায়গাও গণনায় রয়েছে। Quality
-                screening বদলালে ফল বদলায়।
-              </p>
-              <a href="#sundarbans-map">নিচের map-এ জায়গা বেছে দেখুন ↓</a>
-            </div>
-            {data.qaPolicy === "screened" && (
-              <p className="comparison-status">
-                <b>Exploratory QA policy · not robust greening evidence.</b>{" "}
-                This comparison includes intermediate-aerosol records after
-                checking other quality flags. The strict low-aerosol policy
-                retains {data.strictPairedPixels ?? 0} paired pixels. Results
-                depend on QA choices; no statistical significance or
-                forest-change claim is supported.
-              </p>
-            )}
             <div className="comparison-workspace">
               <div className="comparison-main" id="sundarbans-map">
                 <p className="comparison-steps">
@@ -364,6 +360,7 @@ export default function SundarbansComparison() {
                     aria-pressed={selecting}
                     onClick={() => setSelecting(!selecting)}
                   >
+                    <MousePointer2 size={17} />
                     {selecting ? "Done selecting" : "Select pixel"}
                   </button>
                   <button
@@ -371,6 +368,7 @@ export default function SundarbansComparison() {
                     aria-pressed={mode === "compare"}
                     onClick={() => setMode("compare")}
                   >
+                    <Columns2 size={17} />
                     Before / after
                   </button>
                   <button
@@ -378,6 +376,7 @@ export default function SundarbansComparison() {
                     aria-pressed={mode === "change"}
                     onClick={() => setMode("change")}
                   >
+                    <ChartNoAxesCombined size={17} />
                     NDVI change
                   </button>
                   <span>
@@ -512,7 +511,7 @@ export default function SundarbansComparison() {
                 onToggle={(ev) => setAnalysisOpen(ev.currentTarget.open)}
               >
                 <summary>
-                  ফলাফল ও নির্বাচিত জায়গা{" "}
+                  <Scan size={18} /> Pixel inspection{" "}
                   <span>NDVI = গাছপালার সবুজের সূচক</span>
                 </summary>
                 <div className="comparison-analysis-body">
@@ -583,6 +582,9 @@ export default function SundarbansComparison() {
                     )}
                   </div>
                   <div className="comparison-summary">
+                    <h3>
+                      <ShieldCheck size={18} /> Data quality & coverage
+                    </h3>
                     <span>
                       <b>{data.summary?.pairedCoveragePercent}%</b> paired
                       pixels / full native raster footprint (includes water and
@@ -598,26 +600,65 @@ export default function SundarbansComparison() {
                       ? `Selected pixel: before ${sample[0]?.toFixed(4) ?? "no reliable data"}; after ${sample[1]?.toFixed(4) ?? "no reliable data"}; change ${sample[2]?.toFixed(4) ?? "unavailable"}. Complete seasonal years: ${sample[3] ?? 0}/5 before; ${sample[4] ?? 0}/5 after.`
                       : "রঙিন ঘরে click করলে সেই জায়গার ফল এখানে দেখাবে।"}
                   </p>
+                  <p className="comparison-policy-label">
+                    <Layers size={15} /> QA policy:{" "}
+                    {data.qaPolicy === "screened"
+                      ? "Screened · exploratory"
+                      : "Strict"}
+                  </p>
                   <details className="comparison-method">
                     <summary>Processing method</summary>
                     <p>{data.method}</p>
                   </details>
-                  <div className="source-links">
-                    {[
-                      "before",
-                      "after",
-                      "change",
-                      "beforeYears",
-                      "afterYears",
-                    ].map((k) => (
-                      <a key={k} href={`/data/sundarbans/${k}.tif`} download>
-                        Download {k} GeoTIFF
-                      </a>
-                    ))}
-                  </div>
                 </div>
               </details>
             </div>
+            <div className="comparison-downloads">
+              {[
+                ["before", "Before GeoTIFF", "2001–2005 · NDVI"],
+                ["after", "After GeoTIFF", "2020–2024 · NDVI"],
+                ["change", "Change GeoTIFF", "After − before"],
+                ["beforeYears", "Before coverage", "Complete seasonal years"],
+                ["afterYears", "After coverage", "Complete seasonal years"],
+              ].map(([key, title, note]) => (
+                <a href={`/data/sundarbans/${key}.tif`} download key={key}>
+                  <Download size={22} />
+                  <span>
+                    <b>{title}</b>
+                    <small>{note}</small>
+                  </span>
+                </a>
+              ))}
+            </div>
+            <div className="simple-result">
+              <span className="eyebrow">
+                RESULT AT A GLANCE · এক নজরে ফলাফল
+              </span>
+              <h3>পুরো সুন্দরবন সম্পর্কে এখনও নিশ্চিত সিদ্ধান্ত নেই</h3>
+              <p>
+                তুলনা করা অংশে গড় NDVI পরিবর্তন{" "}
+                {data.summary!.meanChange > 0 ? "+" : ""}
+                {data.summary!.meanChange.toFixed(4)}। এটি গাছের সংখ্যা বা
+                বনভূমির শতকরা পরিবর্তন নয়।
+              </p>
+              <p>
+                <b>কতটা নিশ্চিত?</b> ফলটি প্রাথমিক। Raster এলাকার মাত্র{" "}
+                {data.summary!.pairedCoveragePercent}% অংশে দুই সময়ের তুলনাযোগ্য
+                data আছে; এতে পানি ও বাদ দেওয়া জায়গাও গণনায় রয়েছে। Quality
+                screening বদলালে ফল বদলায়।
+              </p>
+              <a href="#sundarbans-map">নিচের map-এ জায়গা বেছে দেখুন ↓</a>
+            </div>
+            {data.qaPolicy === "screened" && (
+              <p className="comparison-status">
+                <b>Exploratory QA policy · not robust greening evidence.</b>{" "}
+                This comparison includes intermediate-aerosol records after
+                checking other quality flags. The strict low-aerosol policy
+                retains {data.strictPairedPixels ?? 0} paired pixels. Results
+                depend on QA choices; no statistical significance or
+                forest-change claim is supported.
+              </p>
+            )}
           </>
         )}
         <p>

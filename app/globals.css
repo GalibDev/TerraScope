@@ -3532,3 +3532,242 @@ aside {
     padding: 16px;
   }
 }
+/* Sundarbans reference layout, retaining measured scientific rasters. */
+.sundarbans-card {
+  background: #032b2d;
+  border-color: #387a70;
+}
+.sundarbans-card .comparison-banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 22px;
+  background:
+    linear-gradient(90deg, #032a2df5 40%, #032a2d75),
+    url("/brand/forest.webp") center / cover;
+}
+.comparison-brand-icon {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  border: 1px solid #79cf46;
+  border-radius: 16px;
+  background: #14632f;
+  color: #b8f25d;
+}
+.sundarbans-card .comparison-banner h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+.comparison-banner h2 span {
+  color: #a3ef58;
+}
+.comparison-exploratory {
+  border: 1px solid #a68937;
+  color: #f2d96c;
+  border-radius: 20px;
+  padding: 7px 11px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.comparison-export {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+  color: #e6f7e9;
+  background: #126d38;
+  border: 1px solid #7ec74e;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 11px;
+}
+.sundarbans-card .comparison-workspace {
+  grid-template-columns: minmax(0, 1fr) 290px;
+  gap: 16px;
+}
+.sundarbans-card .comparison-controls {
+  background: #0a3b3d;
+  border: 1px solid #4b9585;
+  border-radius: 12px;
+  padding: 8px;
+}
+.sundarbans-card .comparison-controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-color: transparent;
+  background: transparent;
+  flex: 1;
+}
+.sundarbans-card .comparison-controls button:first-child {
+  order: 2;
+}
+.sundarbans-card .comparison-controls > span {
+  order: 3;
+  padding: 2px 5px;
+}
+.sundarbans-card .comparison-controls [aria-pressed="true"] {
+  background: #137333;
+  color: #eaffcf;
+  border-color: #99d752;
+  box-shadow: inset 0 0 12px #a4e93e18;
+}
+.sundarbans-card .comparison-map {
+  height: 520px;
+  border-color: #5b9e87;
+  border-radius: 14px;
+}
+.sundarbans-card .comparison-handle {
+  background: #13723f;
+  border-color: #e4ffd9;
+  box-shadow:
+    0 0 0 4px #84d95220,
+    0 3px 12px #0005;
+}
+.sundarbans-card .comparison-divider {
+  background: #dcffcf;
+}
+.sundarbans-card .comparison-label {
+  background: #073a2fe8;
+  border-color: #73a15c;
+}
+.sundarbans-card .comparison-label small {
+  color: #c6edaa;
+  font-weight: 700;
+}
+.sundarbans-card .comparison-analysis {
+  background: #073437;
+  border-color: #4caa90;
+  margin-top: 0;
+}
+.comparison-analysis > summary > svg {
+  vertical-align: middle;
+  color: #b8ef57;
+  margin-right: 7px;
+}
+.sundarbans-card .comparison-pixel-values {
+  background: #0e4140;
+  border-color: #397a70;
+}
+.sundarbans-card .comparison-summary {
+  border-top: 1px solid #39746b;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+.comparison-summary h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #e6f5e9;
+  margin: 0;
+}
+.comparison-summary h3 svg {
+  color: #bcf257;
+}
+.sundarbans-card .comparison-summary > span {
+  background: #0b3a39;
+  border-color: #336b62;
+}
+.comparison-policy-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #c4e8ae !important;
+}
+.comparison-downloads {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+.comparison-downloads a {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 15px 12px;
+  border: 1px solid #4b9e88;
+  border-radius: 12px;
+  background: #0a3b38;
+  color: #e5f5e8;
+}
+.comparison-downloads a:hover {
+  background: #145646;
+  border-color: #b5ef68;
+}
+.comparison-downloads svg {
+  color: #b0ef67;
+  flex-shrink: 0;
+}
+.comparison-downloads b {
+  display: block;
+  font-size: 11px;
+}
+.comparison-downloads small {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+  color: #b3d7cf;
+  line-height: 1.4;
+}
+.sundarbans-card .simple-result {
+  margin-top: 20px;
+  background: #0c3839;
+}
+@media (max-width: 1150px) {
+  .sundarbans-card .comparison-banner {
+    flex-wrap: wrap;
+  }
+  .comparison-exploratory {
+    margin-left: 80px;
+  }
+  .comparison-export {
+    margin-left: auto;
+  }
+  .comparison-downloads {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 900px) {
+  .sundarbans-card .comparison-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 620px) {
+  .sundarbans-card .comparison-banner {
+    padding: 18px 14px;
+    gap: 12px;
+  }
+  .comparison-brand-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+  .sundarbans-card .comparison-banner h2 {
+    font-size: 24px;
+  }
+  .comparison-banner > div:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+  }
+  .comparison-exploratory {
+    margin-left: 0;
+  }
+  .sundarbans-card .comparison-map {
+    height: 410px;
+  }
+  .comparison-downloads {
+    grid-template-columns: 1fr 1fr;
+  }
+  .comparison-downloads a {
+    padding: 12px 9px;
+  }
+  .sundarbans-card .comparison-controls button {
+    flex-basis: 40%;
+  }
+}
