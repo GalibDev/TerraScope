@@ -900,16 +900,48 @@ export default function Home() {
             <div className="card-heading">
               <div>
                 <h2>
-                  <Sparkles size={18} /> Explain this result
+                  <Sparkles size={18} /> ফলাফল সহজ ভাষায়
                 </h2>
-                <p>Reference guidance for your current study selection.</p>
+                <p>
+                  {selected.name} · {start}–{end} · {index} · নির্বাচিত study
+                  point
+                </p>
               </div>
               <span className="new">SCIENCE FIRST</span>
             </div>
+            <div className="plain-result" aria-live="polite">
+              <h3>
+                {illustrative
+                  ? "এটি শুধু demo — বাস্তব ফল নয়"
+                  : datasetStatus === "Loading dataset status…"
+                    ? "NASA data লোড হচ্ছে — একটু অপেক্ষা করুন"
+                    : !rows.length
+                      ? "এই সময়ে ব্যবহারযোগ্য data পাওয়া যায়নি"
+                      : stats.classification === "Greening"
+                        ? "এই study point-এ সবুজের সূচক বাড়ার প্রবণতা আছে"
+                        : stats.classification === "Browning"
+                          ? "এই study point-এ সবুজের সূচক কমার প্রবণতা আছে"
+                          : stats.classification ===
+                              "No clear directional trend"
+                            ? "বাড়া বা কমার স্পষ্ট প্রবণতা পাওয়া যায়নি"
+                            : "সবুজ বেড়েছে না কমেছে — এখনও নিশ্চিত বলা যাচ্ছে না"}
+              </h3>
+              <p>
+                {illustrative
+                  ? "Measured data চালু করলে NASA-র প্রকৃত observations দেখতে পাবেন।"
+                  : `${rows.length}টি quality-filtered observation পাওয়া গেছে। এর মধ্যে ${stats.n}টি বছরের সব ১২ মাসের data আছে।`}
+              </p>
+              <p>
+                {illustrative
+                  ? "Demo-র সংখ্যা দিয়ে পরিবেশ সম্পর্কে সিদ্ধান্ত নেবেন না।"
+                  : stats.classification === "Insufficient data"
+                    ? "Data থাকলেও দীর্ঘমেয়াদি সিদ্ধান্তের জন্য প্রয়োজনীয় পূর্ণ বছর ও uncertainty checks যথেষ্ট নয়। এর মানে গাছ নেই বা পরিবর্তন হয়নি—এমন নয়।"
+                    : "এটি সবুজের সূচকের ফল। গাছের সংখ্যা, বনভূমির পরিবর্তন বা পরিবর্তনের কারণ সরাসরি বোঝায় না।"}
+              </p>
+              <a href="#sundarbans">সুন্দরবনের আগে ও পরের ফল দেখুন →</a>
+            </div>
             <p className="scientist-intro">
-              Questions about the evidence?
-              <br />
-              <span>Explore the method and its limits.</span>
+              আরও জানতে চান? নিচে প্রশ্ন বেছে নিন।
             </p>
             <div className="prompts">
               {[

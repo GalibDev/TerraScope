@@ -323,6 +323,25 @@ export default function SundarbansComparison() {
           </div>
         ) : (
           <>
+            <div className="simple-result">
+              <span className="eyebrow">
+                RESULT AT A GLANCE · এক নজরে ফলাফল
+              </span>
+              <h3>পুরো সুন্দরবন সম্পর্কে এখনও নিশ্চিত সিদ্ধান্ত নেই</h3>
+              <p>
+                তুলনা করা অংশে গড় NDVI পরিবর্তন{" "}
+                {data.summary!.meanChange > 0 ? "+" : ""}
+                {data.summary!.meanChange.toFixed(4)}। এটি গাছের সংখ্যা বা
+                বনভূমির শতকরা পরিবর্তন নয়।
+              </p>
+              <p>
+                <b>কতটা নিশ্চিত?</b> ফলটি প্রাথমিক। Raster এলাকার মাত্র{" "}
+                {data.summary!.pairedCoveragePercent}% অংশে দুই সময়ের তুলনাযোগ্য
+                data আছে; এতে পানি ও বাদ দেওয়া জায়গাও গণনায় রয়েছে। Quality
+                screening বদলালে ফল বদলায়।
+              </p>
+              <a href="#sundarbans-map">নিচের map-এ জায়গা বেছে দেখুন ↓</a>
+            </div>
             {data.qaPolicy === "screened" && (
               <p className="comparison-status">
                 <b>Exploratory QA policy · not robust greening evidence.</b>{" "}
@@ -334,7 +353,11 @@ export default function SundarbansComparison() {
               </p>
             )}
             <div className="comparison-workspace">
-              <div className="comparison-main">
+              <div className="comparison-main" id="sundarbans-map">
+                <p className="comparison-steps">
+                  ১. Slider সরিয়ে আগের ও পরের অবস্থা দেখুন → ২. Select pixel
+                  চাপুন → ৩. রঙিন ঘরে click করে মান দেখুন
+                </p>
                 <div className="comparison-controls">
                   <button
                     className="secondary"
@@ -489,7 +512,8 @@ export default function SundarbansComparison() {
                 onToggle={(ev) => setAnalysisOpen(ev.currentTarget.open)}
               >
                 <summary>
-                  Analysis <span>NDVI · MODIS Terra</span>
+                  ফলাফল ও নির্বাচিত জায়গা{" "}
+                  <span>NDVI = গাছপালার সবুজের সূচক</span>
                 </summary>
                 <div className="comparison-analysis-body">
                   <p className="comparison-data-kind">
@@ -522,7 +546,7 @@ export default function SundarbansComparison() {
                               <dd>{sample[1].toFixed(4)}</dd>
                             </div>
                             <div>
-                              <dt>ΔNDVI · after − before</dt>
+                              <dt>পরিবর্তন · পরে − আগে</dt>
                               <dd>
                                 {sample[2] == null
                                   ? "Unavailable"
@@ -530,6 +554,15 @@ export default function SundarbansComparison() {
                               </dd>
                             </div>
                           </dl>
+                          <p>
+                            {sample[2] == null
+                              ? "পরিবর্তন নির্ণয়ের data নেই।"
+                              : sample[2] > 0
+                                ? "এই ঘরে পরের সময়ে সবুজের সূচক বেশি। এটি নতুন গাছের সংখ্যা বোঝায় না।"
+                                : sample[2] < 0
+                                  ? "এই ঘরে পরের সময়ে সবুজের সূচক কম। এটি একা গাছ কাটার প্রমাণ নয়।"
+                                  : "এই ঘরে দুই সময়ের সূচক একই।"}
+                          </p>
                           <small>
                             Complete seasonal years: {sample[3] ?? 0}/5 before ·{" "}
                             {sample[4] ?? 0}/5 after
@@ -563,7 +596,7 @@ export default function SundarbansComparison() {
                   <p aria-live="polite">
                     {sample
                       ? `Selected pixel: before ${sample[0]?.toFixed(4) ?? "no reliable data"}; after ${sample[1]?.toFixed(4) ?? "no reliable data"}; change ${sample[2]?.toFixed(4) ?? "unavailable"}. Complete seasonal years: ${sample[3] ?? 0}/5 before; ${sample[4] ?? 0}/5 after.`
-                      : "Select a pixel on the map to inspect its measured values."}
+                      : "রঙিন ঘরে click করলে সেই জায়গার ফল এখানে দেখাবে।"}
                   </p>
                   <details className="comparison-method">
                     <summary>Processing method</summary>
