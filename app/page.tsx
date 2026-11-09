@@ -32,6 +32,11 @@ import {
   ChevronDown,
   Check,
   Menu,
+  Satellite,
+  CloudDownload,
+  CodeXml,
+  Orbit,
+  Network,
 } from "lucide-react";
 import { regions } from "@/lib/regions";
 import { demo, monthly, seasonal, trend } from "@/lib/analysis";
@@ -73,8 +78,40 @@ export default function Home() {
       );
     };
     syncSection();
+    let frame = 0;
+    const updateFromScroll = () => {
+      frame = 0;
+      const activationLine =
+        (document.querySelector("header")?.getBoundingClientRect().bottom ??
+          80) + 100;
+      let selected = "overview";
+      let closestTop = -Infinity;
+      for (const [, , id] of links) {
+        const top = document.getElementById(id)?.getBoundingClientRect().top;
+        if (top !== undefined && top <= activationLine && top >= closestTop) {
+          selected = id;
+          closestTop = top;
+        }
+      }
+      if (
+        window.scrollY + window.innerHeight >=
+        document.documentElement.scrollHeight - 8
+      )
+        selected = "sources";
+      setActiveSection(selected);
+    };
+    const scheduleScrollUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateFromScroll);
+    };
     window.addEventListener("hashchange", syncSection);
-    return () => window.removeEventListener("hashchange", syncSection);
+    window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
+    window.addEventListener("resize", scheduleScrollUpdate);
+    return () => {
+      window.removeEventListener("hashchange", syncSection);
+      window.removeEventListener("scroll", scheduleScrollUpdate);
+      window.removeEventListener("resize", scheduleScrollUpdate);
+      window.cancelAnimationFrame(frame);
+    };
   }, []);
   const [region, setRegion] = useState("bangladesh"),
     [index, setIndex] = useState("NDVI"),
@@ -313,7 +350,13 @@ export default function Home() {
           </a>
         ))}
         <div className="sidebar-note">
-          <Globe2 size={26} />
+          <Image
+            className="sidebar-note-logo"
+            src="/brand/terrascope.svg"
+            alt="TerraScope"
+            width={48}
+            height={48}
+          />
           <strong>
             Bangladesh,
             <br />
@@ -1265,7 +1308,7 @@ export default function Home() {
             </article>
             <article className="science-card">
               <h3>
-                <Layers /> Reproducibility & sources
+                <Network /> Reproducibility & sources
               </h3>
               <p>Explore the data, methods and code.</p>
               <div className="science-resources">
@@ -1274,25 +1317,25 @@ export default function Home() {
                     "MOD13Q1 v6.1",
                     "Product information",
                     "https://modis.gsfc.nasa.gov/data/dataprod/mod13.php",
-                    Globe2,
+                    Satellite,
                   ],
                   [
                     "AppEEARS",
                     "Data access",
                     "https://appeears.earthdatacloud.nasa.gov/",
-                    Database,
+                    CloudDownload,
                   ],
                   [
                     "Source code",
                     "GitHub",
                     "https://github.com/GalibDev/TerraScope",
-                    BookOpen,
+                    CodeXml,
                   ],
                   [
                     "Earthdata",
                     "Search",
                     "https://search.earthdata.nasa.gov/search?q=MOD13Q1",
-                    MapIcon,
+                    Orbit,
                   ],
                 ].map(([label, description, url, Icon]) => {
                   const LinkIcon = Icon as typeof Globe2;
@@ -1303,7 +1346,9 @@ export default function Home() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      <LinkIcon />
+                      <span className="resource-icon">
+                        <LinkIcon strokeWidth={1.7} aria-hidden="true" />
+                      </span>
                       <b>{label as string}</b>
                       <small>{description as string} ↗</small>
                     </a>
