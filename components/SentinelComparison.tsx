@@ -1,6 +1,15 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import * as maplibregl from "maplibre-gl";
+import {
+  Trees,
+  Columns2,
+  Leaf,
+  MousePointer2,
+  Scan,
+  ShieldCheck,
+  Download,
+} from "lucide-react";
 type Dataset = {
   width: number;
   height: number;
@@ -21,6 +30,29 @@ type Dataset = {
 };
 export default function SentinelComparison() {
   const [requested, setRequested] = useState(false);
+  const sectionEl = useRef<HTMLElement>(null);
+  const dragging = useRef(false);
+  const [selecting, setSelecting] = useState(false);
+  const moveDivider = (x: number) => {
+    const rect = baseEl.current?.getBoundingClientRect();
+    if (rect)
+      setSplit(
+        Math.max(0, Math.min(100, ((x - rect.left) / rect.width) * 100)),
+      );
+  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRequested(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    if (sectionEl.current) observer.observe(sectionEl.current);
+    return () => observer.disconnect();
+  }, []);
   const [data, setData] = useState<Dataset | null>(null),
     [error, setError] = useState("");
   const [view, setView] = useState<"rgb" | "ndvi" | "change">("rgb"),
@@ -235,15 +267,41 @@ export default function SentinelComparison() {
     });
     return () => updates.forEach((f) => f());
   }, [data, view]);
+  useEffect(() => {
+    const base = maps.current[0];
+    if (!base) return;
+    if (selecting) base.dragPan.disable();
+    else base.dragPan.enable();
+    base.getCanvas().style.cursor = selecting ? "crosshair" : "";
+  }, [data, selecting]);
   return (
-    <section className="card sentinel-card" id="sentinel2">
-      <div className="card-heading">
+    <section
+      className="card sentinel-card sentinel-primary"
+      id="sundarbans"
+      ref={sectionEl}
+    >
+      <span id="sentinel2" />
+      <div className="card-heading sentinel-banner">
+        <div className="sentinel-brand-icon">
+          <Trees size={34} />
+        </div>
         <div>
           <div className="eyebrow">DETAILED VIEW · COPERNICUS / ESA</div>
-          <h2>Sentinel-2 · Sundarbans in detail</h2>
+          <h2>
+            Sundarbans <span>comparison</span>
+          </h2>
           <p>10 m imagery and NDVI · January 2020 versus January 2024</p>
         </div>
-        <a href="#sundarbans">MODIS long-term view ↑</a>
+        <span className="sentinel-pill">
+          Exploratory comparison · Sentinel-2
+        </span>
+        <a
+          className="sentinel-export"
+          href="/data/sentinel2/change.tif"
+          download
+        >
+          <Download size={16} /> Export GeoTIFF
+        </a>
       </div>
       <div className="sentinel-content">
         <p>
@@ -271,13 +329,31 @@ export default function SentinelComparison() {
                   aria-pressed={view === v}
                   onClick={() => setView(v)}
                 >
-                  {v === "rgb"
-                    ? "True-color imagery"
-                    : v === "ndvi"
-                      ? "Measured NDVI"
-                      : "NDVI change"}
+                  {v === "rgb" ? (
+                    <>
+                      <Columns2 size={18} />
+                      Before / after
+                    </>
+                  ) : v === "ndvi" ? (
+                    <>
+                      <Leaf size={18} />
+                      Measured NDVI
+                    </>
+                  ) : (
+                    "NDVI change"
+                  )}
                 </button>
               ))}
+              <button
+                aria-pressed={selecting}
+                onClick={() => setSelecting(!selecting)}
+              >
+                <MousePointer2 size={18} />
+                {selecting ? "Done selecting" : "Select pixel"}
+              </button>
+              <span className="sentinel-toolbar-note">
+                True-color imagery + measured NDVI · 10 m
+              </span>
             </div>
             <div className="sentinel-layout">
               <div>
@@ -308,6 +384,62 @@ export default function SentinelComparison() {
                         className="sentinel-line"
                         style={{ left: `${split}%` }}
                       />
+                      <button
+                        className="sentinel-handle"
+                        role="slider"
+                        aria-label="Sundarbans comparison divider"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={Math.round(split)}
+                        style={{
+                          left: `clamp(24px, ${split}%, calc(100% - 24px))`,
+                        }}
+                        onPointerDown={(ev) => {
+                          ev.preventDefault();
+                          dragging.current = true;
+                          ev.currentTarget.setPointerCapture(ev.pointerId);
+                          moveDivider(ev.clientX);
+                        }}
+                        onPointerMove={(ev) => {
+                          if (dragging.current) moveDivider(ev.clientX);
+                        }}
+                        onPointerUp={(ev) => {
+                          dragging.current = false;
+                          ev.currentTarget.releasePointerCapture(ev.pointerId);
+                        }}
+                        onPointerCancel={() => {
+                          dragging.current = false;
+                        }}
+                        onKeyDown={(ev) => {
+                          if (
+                            ![
+                              "ArrowLeft",
+                              "ArrowRight",
+                              "Home",
+                              "End",
+                            ].includes(ev.key)
+                          )
+                            return;
+                          ev.preventDefault();
+                          setSplit((v) =>
+                            ev.key === "Home"
+                              ? 0
+                              : ev.key === "End"
+                                ? 100
+                                : Math.max(
+                                    0,
+                                    Math.min(
+                                      100,
+                                      v +
+                                        (ev.key === "ArrowRight" ? 1 : -1) *
+                                          (ev.shiftKey ? 10 : 1),
+                                    ),
+                                  ),
+                          );
+                        }}
+                      >
+                        ‹ ›
+                      </button>
                     </>
                   )}
                   <span className="sentinel-source">
@@ -346,7 +478,9 @@ export default function SentinelComparison() {
                 </div>
               </div>
               <aside className="sentinel-inspection">
-                <h3>Pixel inspection</h3>
+                <h3>
+                  <Scan size={19} /> Pixel inspection
+                </h3>
                 <p>Map-এ click করলে একই জায়গার measured NDVI দেখা যাবে।</p>
                 <div role="status">
                   {sample && sample.slice(0, 3).every(Number.isFinite) ? (
@@ -377,7 +511,9 @@ export default function SentinelComparison() {
                     </p>
                   )}
                 </div>
-                <h3>Data quality & coverage</h3>
+                <h3>
+                  <ShieldCheck size={19} /> Data quality & coverage
+                </h3>
                 <p>
                   <b>{data.pairedCoveragePercent}%</b> paired land pixels / full
                   pilot raster footprint, including water.

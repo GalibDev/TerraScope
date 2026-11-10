@@ -61,7 +61,7 @@ const links = [
   ["Overview", LayoutDashboard, "overview"],
   ["Interactive map", MapIcon, "map"],
   ["Sundarbans comparison", Layers, "sundarbans"],
-  ["Sentinel-2 detailed view", MapIcon, "sentinel2"],
+  ["MODIS long-term view", ChartNoAxesCombined, "modis"],
   ["Trend detective", ChartNoAxesCombined, "trends"],
   ["Region comparison", Layers, "regions"],
   ["Explain results", FlaskConical, "scientist"],
@@ -729,8 +729,8 @@ export default function Home() {
               </div>
             </article>
           </section>
-          <SundarbansComparison />
           <SentinelComparison />
+          <SundarbansComparison />
           <section className="card trend-card" id="trends">
             <div className="card-heading">
               <div>

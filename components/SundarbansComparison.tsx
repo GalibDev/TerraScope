@@ -321,7 +321,7 @@ export default function SundarbansComparison() {
     };
   }, [mode, data]);
   return (
-    <section className="card sundarbans-card" id="sundarbans">
+    <section className="card sundarbans-card" id="modis">
       <div className="card-heading comparison-banner">
         <div className="comparison-brand-icon">
           <Trees size={34} />
@@ -329,7 +329,7 @@ export default function SundarbansComparison() {
         <div>
           <div className="eyebrow">SPATIAL COMPARISON · MOD13Q1.061</div>
           <h2>
-            Sundarbans <span>comparison</span>
+            Sundarbans <span>MODIS long-term view</span>
           </h2>
           <p>2001–2005 versus 2020–2024 · Jan / Feb / Nov / Dec · NDVI</p>
         </div>
