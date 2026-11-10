@@ -162,6 +162,7 @@ export default function SentinelComparison() {
           [data.bbox[2], data.bbox[3]],
         ],
         fitBoundsOptions: { padding: 10 },
+        maxBounds: [data.coordinates[3], data.coordinates[1]],
         dragRotate: false,
         pitchWithRotate: false,
         renderWorldCopies: false,
@@ -323,6 +324,18 @@ export default function SentinelComparison() {
         ) : (
           <>
             <div className="sentinel-controls">
+              <button
+                onClick={() => {
+                  const base = maps.current[0];
+                  if (base)
+                    base.fitBounds([data.coordinates[3], data.coordinates[1]], {
+                      padding: 0,
+                      duration: 500,
+                    });
+                }}
+              >
+                Reset view
+              </button>
               {(["rgb", "ndvi", "change"] as const).map((v) => (
                 <button
                   key={v}
