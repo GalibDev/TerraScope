@@ -580,7 +580,7 @@ export default function Home() {
             <div
               className="study-visual"
               role="img"
-              aria-label="Decorative forest illustration"
+              aria-label="Illustrative photograph of a river surrounded by green forest"
             />
             <div className="study-symbol">
               <Leaf size={34} />
